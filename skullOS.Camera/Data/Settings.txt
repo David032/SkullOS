@@ -1,0 +1,2 @@
+﻿Pin=25
+Mode=Image

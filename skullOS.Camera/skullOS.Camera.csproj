@@ -10,4 +10,10 @@
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\Settings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

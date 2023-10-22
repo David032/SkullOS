@@ -33,7 +33,7 @@
         public Modules()
         {
             _modules = new List<Module>();
-            string[] entries = File.ReadAllLines(@"Data\Modules.txt");
+            string[] entries = File.ReadAllLines(@"Data/Modules.txt");
             foreach (string entry in entries)
             {
                 string[] split = entry.Split(" = ");

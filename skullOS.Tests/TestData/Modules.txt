@@ -1,1 +1,2 @@
-﻿Camera = True
+﻿Input = True
+Camera = True

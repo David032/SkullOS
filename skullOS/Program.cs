@@ -5,7 +5,7 @@ namespace skullOS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             string input = args[0].ToLower();
             switch (input)
@@ -27,6 +27,8 @@ namespace skullOS
                     Environment.Exit(-1);
                     break;
             }
+
+            await Task.Delay(Timeout.Infinite);
         }
 
         static void Run(Modules modulesToLoad = null)

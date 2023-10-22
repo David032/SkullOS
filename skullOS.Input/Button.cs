@@ -1,36 +1,16 @@
-﻿using System.Device.Gpio;
+﻿using Iot.Device.Button;
 
 namespace skullOS.Input
 {
-    public enum ButtonEvent
+    internal class Button : InputDevice
     {
-        Press,
-        Release
-    }
+        public GpioButton GpioButton;
 
-    internal class Button
-    {
-        public int Pin = 25;
-        public ButtonEvent EventType = ButtonEvent.Press;
-        public string Name = "";
-
-        public Button(string buttonName, int pin = 25, ButtonEvent action = ButtonEvent.Press)
+        public Button(string name, int pin = 0)
         {
-            Name = buttonName;
-            Pin = pin;
-            EventType = action;
-        }
-
-        public PinEventTypes getButtonEvent()
-        {
-            if (EventType == ButtonEvent.Press)
-            {
-                return PinEventTypes.Falling;
-            }
-            else
-            {
-                return PinEventTypes.Rising;
-            }
+            this.Name = name;
+            this.pin = pin;
+            this.GpioButton = new GpioButton(pin);
         }
     }
 }
