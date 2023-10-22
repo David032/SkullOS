@@ -12,8 +12,8 @@ namespace skullOS.Output
         {
             SkullNeoPixel? pixelDisplay = (SkullNeoPixel)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "NeoPixel");
             pixelDisplay?.device.Image.SetPixel(0, 0, Color.AliceBlue);
-            var lifeLed = (SkullLed)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Life Light");
-            lifeLed.ToggleState();
+            SkullLed? lifeLed = (SkullLed)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Life Light");
+            lifeLed.TurnOn();
         }
 
         public override bool Setup(GpioController controller)

@@ -26,10 +26,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Input.Tests", "skullOS.Input.Tests\skullOS.Input.Tests.csproj", "{237A08B2-E8F4-4384-A894-4C356CE45E92}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Core.Tests", "skullOS.Core.Tests\skullOS.Core.Tests.csproj", "{BA89208E-E059-45A3-8A0D-4052063C79D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{464B162B-62FC-49CC-A6AB-72DBE959DD8C} = {464B162B-62FC-49CC-A6AB-72DBE959DD8C}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B50B951E-DF9B-49DD-9CAC-ED8B01C6B1E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Output", "skullOS.Output\skullOS.Output.csproj", "{9AC8960C-539A-4B2C-9D24-5169AF4337FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Output", "skullOS.Output\skullOS.Output.csproj", "{9AC8960C-539A-4B2C-9D24-5169AF4337FA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{464B162B-62FC-49CC-A6AB-72DBE959DD8C} = {464B162B-62FC-49CC-A6AB-72DBE959DD8C}
 	EndProjectSection
