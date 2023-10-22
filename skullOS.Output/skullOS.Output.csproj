@@ -1,22 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\skullOS.Output\skullOS.Output.csproj" />
-    <ProjectReference Include="..\skullOS.Camera\skullOS.Camera.csproj" />
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\Modules.txt">
+    <None Update="Data\Output.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
- 
+
 </Project>

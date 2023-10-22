@@ -1,4 +1,5 @@
 ﻿using skullOS.Core.Interfaces;
+using System.Device.Gpio;
 using System.Reflection;
 
 namespace skullOS
@@ -33,27 +34,28 @@ namespace skullOS
 
         static void Run(Modules modulesToLoad = null)
         {
+            GpioController controller = new();
             List<ISubSystem> systemsLoaded = LoadModules(modulesToLoad);
 
-            SetupModules(systemsLoaded);
+            SetupModules(systemsLoaded, controller);
 
-            RunModules(systemsLoaded);
+            RunModules(systemsLoaded, controller);
         }
 
-        public static bool RunModules(List<ISubSystem> systemsLoaded)
+        public static bool RunModules(List<ISubSystem> systemsLoaded, GpioController controller)
         {
             foreach (ISubSystem system in systemsLoaded)
             {
-                system.Run();
+                system.Run(controller);
             }
             return true;
         }
 
-        public static bool SetupModules(List<ISubSystem> systemsLoaded)
+        public static bool SetupModules(List<ISubSystem> systemsLoaded, GpioController controller)
         {
             foreach (var system in systemsLoaded)
             {
-                if (!system.Setup())
+                if (!system.Setup(controller))
                 {
                     throw new Exception($"{system} failed to load");
                 }

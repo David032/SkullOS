@@ -1,10 +1,12 @@
-﻿namespace skullOS.Core.Interfaces
+﻿using System.Device.Gpio;
+
+namespace skullOS.Core.Interfaces
 {
     public interface ISubSystem
     {
-        bool Setup();
+        bool Setup(GpioController controller);
 
-        void Run();
+        void Run(GpioController controller);
 
         void Stop();
     }

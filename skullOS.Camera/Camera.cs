@@ -1,6 +1,7 @@
 ﻿using Iot.Device.Button;
 using Iot.Device.Media;
 using skullOS.Core;
+using System.Device.Gpio;
 
 namespace skullOS.Camera
 {
@@ -10,27 +11,40 @@ namespace skullOS.Camera
         VideoDevice device;
         VideoConnectionSettings deviceSettings = new(busId: 0, captureSize: (2560, 1440), pixelFormat: VideoPixelFormat.JPEG);
 
+        skullOS.Core.LED_Elements.SkullLed cameraLight;
+        bool hasCameraLed = false;
         public Camera()
         {
 
         }
 
-        public override void Run()
+        public override void Run(GpioController controller)
         {
         }
 
-        public override bool Setup()
+        public override bool Setup(GpioController controller)
         {
             var settings = SettingsLoader.LoadConfig(@"Data/Settings.txt");
+            var defaultValue = new KeyValuePair<string, string>("", "");
 
             var cameraMode = settings
                 .Select(x => x)
                 .Where(x => x.Key == "Mode")
-                .FirstOrDefault();
+                .FirstOrDefault(defaultValue);
             var pinToActOn = settings
                 .Select(x => x)
                 .Where(x => x.Key == "Pin")
-                .FirstOrDefault();
+                .FirstOrDefault(defaultValue);
+            var ledPin = settings
+                .Select(x => x)
+                .Where(x => x.Key == "LedPin")
+                .FirstOrDefault(defaultValue);
+
+            if (!ledPin.Equals(defaultValue))
+            {
+                cameraLight = new Core.LED_Elements.SkullLed("Camera Light", int.Parse(ledPin.Value), controller);
+                hasCameraLed = true;
+            }
 
             switch (cameraMode.Value)
             {
@@ -39,8 +53,16 @@ namespace skullOS.Camera
                     GpioButton button = new(int.Parse(pinToActOn.Value));
                     button.Press += (sender, e) =>
                     {
+                        if (hasCameraLed)
+                        {
+                            cameraLight.ToggleState();
+                        }
                         Console.WriteLine($"({DateTime.Now}) Picture taken!");
                         device.Capture($"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+                        if (hasCameraLed)
+                        {
+                            cameraLight.ToggleState();
+                        }
                     };
 
                     break;

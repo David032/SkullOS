@@ -1,2 +1,3 @@
 ﻿Pin=25
 Mode=Image
+LedPin=26

@@ -1,4 +1,5 @@
 ﻿using skullOS.Core;
+using System.Device.Gpio;
 
 namespace skullOS.Input
 {
@@ -15,12 +16,12 @@ namespace skullOS.Input
             get { return inputDevices; }
         }
 
-        public override void Run()
+        public override void Run(GpioController controller)
         {
             throw new NotImplementedException();
         }
 
-        public override bool Setup()
+        public override bool Setup(GpioController controller)
         {
             throw new NotImplementedException();
         }

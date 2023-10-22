@@ -7,7 +7,7 @@ namespace skullOS.Tests
     {
         static List<ISubSystem> CreateTestModules()
         {
-            string testDataLocation = @"Data\Modules.txt";
+            string testDataLocation = @"Data/Modules.txt";
             Modules modules = new(testDataLocation);
             return Program.LoadModules(modules);
         }
@@ -22,15 +22,17 @@ namespace skullOS.Tests
         [Fact]
         public void TestSetupModules()
         {
+            var mockController = new MockGpioController();
             var modulesLoaded = CreateTestModules();
-            Assert.True(Program.SetupModules(modulesLoaded));
+            Assert.True(Program.SetupModules(modulesLoaded, mockController));
         }
 
         [Fact]
         public void TestRunModules()
         {
+            var mockController = new MockGpioController();
             var modulesLoaded = CreateTestModules();
-            Assert.True(Program.RunModules(modulesLoaded));
+            Assert.True(Program.RunModules(modulesLoaded, mockController));
         }
     }
 }
