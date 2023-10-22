@@ -11,15 +11,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS", "skullOS\skullOS.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Camera", "skullOS.Camera\skullOS.Camera.csproj", "{D4E9CB35-2264-4717-BDB6-7797E84B5DFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Input", "skullOS.Input\skullOS.Input.csproj", "{FDE1F7EA-F552-4B2E-990E-327612D46939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Input", "skullOS.Input\skullOS.Input.csproj", "{FDE1F7EA-F552-4B2E-990E-327612D46939}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6D3C5D36-0002-4EFD-A3B9-0924D6D3CCD8} = {6D3C5D36-0002-4EFD-A3B9-0924D6D3CCD8}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Tests", "skullOS.Tests\skullOS.Tests.csproj", "{9B4C6E1D-BE16-40F3-AFB7-369ACA5BFDBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Tests", "skullOS.Tests\skullOS.Tests.csproj", "{9B4C6E1D-BE16-40F3-AFB7-369ACA5BFDBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Camera.Tests", "skullOS.Camera.Tests\skullOS.Camera.Tests.csproj", "{45513FCC-E0E9-4C2A-A48F-239A380347BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Camera.Tests", "skullOS.Camera.Tests\skullOS.Camera.Tests.csproj", "{45513FCC-E0E9-4C2A-A48F-239A380347BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Input.Tests", "skullOS.Input.Tests\skullOS.Input.Tests.csproj", "{237A08B2-E8F4-4384-A894-4C356CE45E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Input.Tests", "skullOS.Input.Tests\skullOS.Input.Tests.csproj", "{237A08B2-E8F4-4384-A894-4C356CE45E92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Core.Tests", "skullOS.Core.Tests\skullOS.Core.Tests.csproj", "{BA89208E-E059-45A3-8A0D-4052063C79D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.Core.Tests", "skullOS.Core.Tests\skullOS.Core.Tests.csproj", "{BA89208E-E059-45A3-8A0D-4052063C79D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
