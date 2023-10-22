@@ -1,4 +1,4 @@
-﻿BuzzerPin = 17
-NeoPixel = True
-NeoPixelCount = 8
-LedPin = 23
+﻿BuzzerPin=17
+NeoPixel=True
+NeoPixelCount=8
+LedPin=23

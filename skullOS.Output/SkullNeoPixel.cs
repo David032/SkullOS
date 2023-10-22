@@ -23,8 +23,7 @@ namespace skullOS.Output
             };
             using SpiDevice spi = SpiDevice.Create(spiSettings);
 
-            Ws2812b neopixel = new(spi, count);
-
+            neoPixel = new Ws2812b(spi, count);
         }
     }
 }

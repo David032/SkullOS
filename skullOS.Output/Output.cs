@@ -10,35 +10,63 @@ namespace skullOS.Output
 
         public override void Run(GpioController controller)
         {
-            var pixelDisplay = (SkullNeoPixel)outputDevices.Select(x => x).Where(x => x.Name == "NeoPixel").FirstOrDefault();
-            pixelDisplay.device.Image.SetPixel(0, 0, Color.AliceBlue);
+            SkullNeoPixel? pixelDisplay = (SkullNeoPixel)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "NeoPixel");
+            pixelDisplay?.device.Image.SetPixel(0, 0, Color.AliceBlue);
+            var lifeLed = (SkullLed)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Life Light");
+            lifeLed.ToggleState();
         }
 
         public override bool Setup(GpioController controller)
         {
-            var settings = SettingsLoader.LoadConfig(@"Data/Settings.txt");
+            var settings = SettingsLoader.LoadConfig(@"Data/Output.txt");
             var defaultValue = new KeyValuePair<string, string>("", "");
-
-            if (settings.ContainsKey("Buzzer"))
+#if DEBUG
+            Console.WriteLine("Output device settings contain:");
+            foreach (var item in settings)
             {
-                settings.TryGetValue("Buzzer", out string BuzzerPin);
-                var deviceBuzzer = new SkullBuzzer("Buzzer", int.Parse(BuzzerPin));
-                outputDevices.Add(deviceBuzzer);
+                Console.WriteLine(item.Key + " : " + item.Value);
             }
+#endif
+            if (settings.ContainsKey("BuzzerPin"))
+            {
+                if (settings.TryGetValue("BuzzerPin", out string BuzzerPin))
+                {
+                    int buzzerPinNumber = Convert.ToInt32(BuzzerPin);
+                    SkullBuzzer deviceBuzzer = new("Buzzer", buzzerPinNumber);
+                    outputDevices.Add(deviceBuzzer);
+                }
+            }
+
             if (settings.ContainsKey("NeoPixel"))
             {
-                settings.TryGetValue("NeoPixelCount", out string count);
-                var deviceNeoPixel = new SkullNeoPixel("NeoPixel", int.Parse(count));
-                outputDevices.Add(deviceNeoPixel);
+                if (settings.TryGetValue("NeoPixelCount", out string count))
+                {
+                    int neoPixelPinNumber = Convert.ToInt32(count);
+                    SkullNeoPixel deviceNeoPixel = new("NeoPixel", neoPixelPinNumber);
+                    outputDevices.Add(deviceNeoPixel);
+                }
             }
+
 
             if (settings.ContainsKey("LedPin"))
             {
-                settings.TryGetValue("LedPin", out string pin);
-                var deviceLed = new skullOS.Output.SkullLed("Life Light", int.Parse(pin), controller);
-                outputDevices.Add(deviceLed);
+                if (settings.TryGetValue("LedPin", out string pin))
+                {
+                    int lifeLedPinNumber = Convert.ToInt32(pin);
+                    SkullLed deviceLed = new("Life Light", lifeLedPinNumber, controller);
+
+                    outputDevices.Add(deviceLed);
+                }
             }
 
+
+#if DEBUG
+            Console.WriteLine("The following output devices have been registered:");
+            foreach (var item in outputDevices)
+            {
+                Console.WriteLine(item.Name);
+            }
+#endif
             return true;
         }
 

@@ -5,7 +5,9 @@ namespace skullOS.Output
 {
     public class SkullLed : SkullOutputDevice
     {
-        public string name = "";
+        /// <summary>
+        /// SOMETHING IN HERE ISN'T WORKING!
+        /// </summary>
         public int pin = 0;
         public LedBehaviour state = LedBehaviour.Off;
 
@@ -14,14 +16,17 @@ namespace skullOS.Output
 
         public SkullLed(string LedName, int ledPin, GpioController controller)
         {
-            name = LedName;
+            Name = LedName;
             pin = ledPin;
             gpioController = controller;
+
+            gpioController.OpenPin(pin, PinMode.Output);
         }
 
         public void ToggleState()
         {
             gpioController.Write(pin, ((ledOn) ? PinValue.High : PinValue.Low));
+            ledOn = !ledOn;
         }
     }
 }

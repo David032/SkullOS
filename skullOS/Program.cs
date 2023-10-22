@@ -29,6 +29,14 @@ namespace skullOS
                     break;
             }
 
+            await Console.Out.WriteLineAsync("Testign output!");
+            int pin = 23;
+            GpioController controller = new();
+            if (!controller.IsPinOpen(23))
+            {
+                controller.OpenPin(23, PinMode.Output);
+            }
+            controller.Write(pin, PinValue.High);
             await Task.Delay(Timeout.Infinite);
         }
 

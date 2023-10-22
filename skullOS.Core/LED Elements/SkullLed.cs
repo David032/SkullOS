@@ -23,6 +23,8 @@ namespace skullOS.Core.LED_Elements
             name = LedName;
             pin = ledPin;
             gpioController = controller;
+
+            gpioController.OpenPin(pin, PinMode.Output);
         }
 
         public void ToggleState()
