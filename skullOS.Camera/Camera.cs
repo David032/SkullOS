@@ -13,6 +13,8 @@ namespace skullOS.Camera
 
         skullOS.Core.LED_Elements.SkullLed cameraLight;
         bool hasCameraLed = false;
+        GpioButton actionButton;
+
         public Camera()
         {
 
@@ -50,20 +52,8 @@ namespace skullOS.Camera
             {
                 case "Image":
                     device = VideoDevice.Create(deviceSettings);
-                    GpioButton button = new(int.Parse(pinToActOn.Value));
-                    button.Press += (sender, e) =>
-                    {
-                        if (hasCameraLed)
-                        {
-                            cameraLight.ToggleState();
-                        }
-                        Console.WriteLine($"({DateTime.Now}) Picture taken!");
-                        device.Capture($"{DateTime.Now:yyyyMMddHHmmss}.jpg");
-                        if (hasCameraLed)
-                        {
-                            cameraLight.ToggleState();
-                        }
-                    };
+                    actionButton = new(int.Parse(pinToActOn.Value));
+                    actionButton.Press += TakePicture;
 
                     break;
                 case "Video":
@@ -78,9 +68,24 @@ namespace skullOS.Camera
             return true;
         }
 
+        private void TakePicture(object? sender, EventArgs e)
+        {
+            Console.WriteLine($"({DateTime.Now}) Picture taken!");
+            device.Capture($"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+        }
+
         public override void Stop()
         {
             throw new NotImplementedException();
+        }
+
+        public VideoDevice GetCamera()
+        {
+            return device;
+        }
+        public GpioButton GetButton()
+        {
+            return actionButton;
         }
     }
 }

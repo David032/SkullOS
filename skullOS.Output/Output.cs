@@ -12,6 +12,7 @@ namespace skullOS.Output
         {
             SkullNeoPixel? pixelDisplay = (SkullNeoPixel)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "NeoPixel");
             pixelDisplay?.device.Image.SetPixel(0, 0, Color.AliceBlue);
+            pixelDisplay.device.Update();
             SkullLed? lifeLed = (SkullLed)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Life Light");
             lifeLed.TurnOn();
         }

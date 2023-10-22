@@ -3,7 +3,7 @@ using System.Device.Spi;
 
 namespace skullOS.Output
 {
-    internal class SkullNeoPixel : SkullOutputDevice
+    public class SkullNeoPixel : SkullOutputDevice
     {
         public Ws2812b device
         {

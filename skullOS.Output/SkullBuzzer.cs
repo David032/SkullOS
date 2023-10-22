@@ -2,7 +2,7 @@
 
 namespace skullOS.Output
 {
-    internal class SkullBuzzer : SkullOutputDevice
+    public class SkullBuzzer : SkullOutputDevice
     {
         int Pin = 0;
         public Buzzer device
