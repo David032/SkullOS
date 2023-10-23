@@ -1,4 +1,5 @@
-﻿BuzzerPin=17
+﻿BuzzerPin=13
 NeoPixel=True
 NeoPixelCount=8
 LedPin=23
+CameraLed=26

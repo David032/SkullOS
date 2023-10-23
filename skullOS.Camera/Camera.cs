@@ -11,8 +11,6 @@ namespace skullOS.Camera
         VideoDevice device;
         VideoConnectionSettings deviceSettings = new(busId: 0, captureSize: (2560, 1440), pixelFormat: VideoPixelFormat.JPEG);
 
-        skullOS.Core.LED_Elements.SkullLed cameraLight;
-        bool hasCameraLed = false;
         GpioButton actionButton;
 
         public Camera()
@@ -41,12 +39,6 @@ namespace skullOS.Camera
                 .Select(x => x)
                 .Where(x => x.Key == "LedPin")
                 .FirstOrDefault(defaultValue);
-
-            if (!ledPin.Equals(defaultValue))
-            {
-                cameraLight = new Core.LED_Elements.SkullLed("Camera Light", int.Parse(ledPin.Value), controller);
-                hasCameraLed = true;
-            }
 
             switch (cameraMode.Value)
             {

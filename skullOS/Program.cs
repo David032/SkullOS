@@ -55,6 +55,18 @@ namespace skullOS
         {
             foreach (var system in systemsLoaded)
             {
+
+
+                Console.WriteLine("Setting up " + system.ToString());
+                if (system.ToString().Equals("skullOS.Interlink.Interlink"))
+                {
+                    Console.WriteLine("Giving linker data!");
+                    Interlink.Interlink linker = (Interlink.Interlink)systemsLoaded.Select(x => x).FirstOrDefault(x => x.ToString() == "skullOS.Interlink.Interlink");
+                    linker.subSystems = systemsLoaded;
+                }
+
+
+
                 if (!system.Setup(controller))
                 {
                     throw new Exception($"{system} failed to load");

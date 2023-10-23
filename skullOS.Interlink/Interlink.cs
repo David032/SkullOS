@@ -1,4 +1,5 @@
-﻿using skullOS.Core;
+﻿using Iot.Device.Buzzer;
+using skullOS.Core;
 using skullOS.Core.Interfaces;
 using System.Device.Gpio;
 
@@ -6,18 +7,20 @@ namespace skullOS.Interlink
 {
     public class Interlink : Controller
     {
+        public List<ISubSystem> subSystems = new();
         Camera.Camera cameraModule;
         Output.Output outputModule;
 
 
         public override void Run(GpioController controller)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Interlink ran successfully!");
         }
 
         public override bool Setup(GpioController controller)
         {
-            throw new NotImplementedException();
+            Link();
+            return true;
         }
 
         public override void Stop()
@@ -25,23 +28,39 @@ namespace skullOS.Interlink
             throw new NotImplementedException();
         }
 
-        public void Link(List<ISubSystem> activeModules)
+        public void Link()
         {
-            cameraModule = (Camera.Camera)activeModules.Select(x => x).Where(x => x.ToString() == "Camera").FirstOrDefault();
-            outputModule = (Output.Output)activeModules.Select(x => x).Where(x => x.ToString() == "Output").FirstOrDefault();
+            Console.WriteLine("Linkable modules!");
+            foreach (var item in subSystems)
+            {
+                Console.WriteLine(item.ToString());
+            }
+
+            cameraModule = (Camera.Camera)subSystems.Select(x => x).Where(x => x.ToString() == "skullOS.Camera.Camera").FirstOrDefault();
+            outputModule = (Output.Output)subSystems.Select(x => x).Where(x => x.ToString() == "skullOS.Output.Output").FirstOrDefault();
 
             cameraModule.GetButton().Press += PlayBuzzerWhenActivated;
-            //Need to do picture led
+            cameraModule.GetButton().Press += FlashLightWhenActivatedAsync;
+
+            Console.WriteLine(cameraModule.GetCamera().Settings);
         }
 
 
 
         #region Cross Module functions
 
-        private void PlayBuzzerWhenActivated(object? sender, EventArgs e)
+        public void PlayBuzzerWhenActivated(object? sender, EventArgs e)
         {
-            Output.SkullBuzzer? buzzer = (Output.SkullBuzzer)outputModule.outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Buzzer");
-            buzzer?.device.PlayTone(300, 1);
+            var buzzer = (Buzzer)outputModule.outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Buzzer").Device;
+            buzzer.PlayTone(1000, 3000);
+        }
+
+        private async void FlashLightWhenActivatedAsync(object? sender, EventArgs e)
+        {
+            //Output.SkullLed? led = (Output.SkullLed)outputModule.outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Camera Light");
+            //led.TurnOn();
+            //await Task.Delay(15000);
+            //led.TurnOff();
         }
 
         #endregion
