@@ -52,7 +52,7 @@ namespace skullOS.Interlink
         public void PlayBuzzerWhenActivated(object? sender, EventArgs e)
         {
             var buzzer = (Buzzer)outputModule.outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Buzzer").Device;
-            buzzer.PlayTone(1000, 3000);
+            buzzer.PlayTone(1500, 1500);
         }
 
         private async void FlashLightWhenActivatedAsync(object? sender, EventArgs e)

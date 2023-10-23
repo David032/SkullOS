@@ -16,7 +16,8 @@ namespace skullOS.Output
             Console.WriteLine("### OUTPUT DEVICE WARMUP CHECKS ###");
 
             Ws2812b? pixelDisplay = (Ws2812b)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "NeoPixel").Device;
-            pixelDisplay?.Image.SetPixel(0, 0, Color.AliceBlue);
+            pixelDisplay?.Image.SetPixel(1, 1, Color.Green);
+            pixelDisplay?.Image.SetPixel(0, 1, Color.Blue);
             pixelDisplay.Update();
 
             //SkullLed? lifeLed = (SkullLed)outputDevices.Select(x => x).FirstOrDefault(x => x.Name == "Life Light");
