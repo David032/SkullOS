@@ -21,7 +21,7 @@ namespace skullOS.Input
             throw new NotImplementedException();
         }
 
-        public override bool Setup(GpioController controller)
+        public override bool Setup(GpioController controller, System.Device.I2c.I2cBus i2cDevice)
         {
             throw new NotImplementedException();
         }
