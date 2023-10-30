@@ -1,5 +1,7 @@
-﻿using skullOS.Core.Interfaces;
+﻿using Iot.Device.Bmxx80;
+using skullOS.Core.Interfaces;
 using System.Device.Gpio;
+using System.Device.I2c;
 using System.Reflection;
 
 namespace skullOS
@@ -35,9 +37,14 @@ namespace skullOS
         static void Run(Modules modulesToLoad = null)
         {
             GpioController controller = new();
+
+            const int busId = 1;
+            I2cConnectionSettings i2cSettings = new(busId, Bme280.DefaultI2cAddress);
+            I2cDevice i2cDevice = I2cDevice.Create(i2cSettings);
+
             List<ISubSystem> systemsLoaded = LoadModules(modulesToLoad);
 
-            SetupModules(systemsLoaded, controller);
+            SetupModules(systemsLoaded, controller, i2cDevice);
 
             RunModules(systemsLoaded, controller);
         }
@@ -51,7 +58,7 @@ namespace skullOS
             return true;
         }
 
-        public static bool SetupModules(List<ISubSystem> systemsLoaded, GpioController controller)
+        public static bool SetupModules(List<ISubSystem> systemsLoaded, GpioController controller, I2cDevice i2CDevice)
         {
             foreach (var system in systemsLoaded)
             {
@@ -67,7 +74,7 @@ namespace skullOS
 
 
 
-                if (!system.Setup(controller))
+                if (!system.Setup(controller, i2CDevice))
                 {
                     throw new Exception($"{system} failed to load");
                 }

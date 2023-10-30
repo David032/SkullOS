@@ -1,5 +1,6 @@
 ﻿using skullOS.Core;
 using System.Device.Gpio;
+using System.Device.I2c;
 
 namespace skullOS.Input
 {
@@ -21,12 +22,13 @@ namespace skullOS.Input
             throw new NotImplementedException();
         }
 
-        public override bool Setup(GpioController controller, System.Device.I2c.I2cBus i2cDevice)
+
+        public override void Stop()
         {
             throw new NotImplementedException();
         }
 
-        public override void Stop()
+        public override bool Setup(GpioController controller, I2cDevice i2CDevice)
         {
             throw new NotImplementedException();
         }

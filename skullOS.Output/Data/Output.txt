@@ -4,3 +4,5 @@ NeoPixelCount=8
 LedPin=23
 CameraLed=26
 BMP180=True
+DangerLed=16
+AlertLed=12

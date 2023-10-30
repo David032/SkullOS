@@ -2,6 +2,7 @@
 using Iot.Device.Media;
 using skullOS.Core;
 using System.Device.Gpio;
+using System.Device.I2c;
 
 namespace skullOS.Camera
 {
@@ -9,7 +10,7 @@ namespace skullOS.Camera
     {
         //capture size is set to QHD, which is supported by the zero cam
         VideoDevice device;
-        VideoConnectionSettings deviceSettings = new(busId: 0, captureSize: (2560, 1440), pixelFormat: VideoPixelFormat.JPEG);
+        VideoConnectionSettings deviceSettings = new(busId: 0, captureSize: (2592, 1944), pixelFormat: VideoPixelFormat.JPEG);
 
         GpioButton actionButton;
 
@@ -22,7 +23,7 @@ namespace skullOS.Camera
         {
         }
 
-        public override bool Setup(GpioController controller)
+        public override bool Setup(GpioController controller, I2cDevice i2CDevice)
         {
             var settings = SettingsLoader.LoadConfig(@"Data/Settings.txt");
             var defaultValue = new KeyValuePair<string, string>("", "");
@@ -44,6 +45,8 @@ namespace skullOS.Camera
             {
                 case "Image":
                     device = VideoDevice.Create(deviceSettings);
+                    device.Settings.HorizontalFlip = true;
+                    device.Settings.VerticalFlip = true;
                     actionButton = new(int.Parse(pinToActOn.Value));
                     actionButton.Press += TakePicture;
 

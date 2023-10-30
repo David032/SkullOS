@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 ServoSkullDemo/Builds
 skullOS/skullOs/
+
+skullOS/skullOSselfContained/
