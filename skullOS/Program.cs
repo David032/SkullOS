@@ -1,4 +1,5 @@
 ﻿using Iot.Device.Bmxx80;
+using skullOS.Core;
 using skullOS.Core.Interfaces;
 using System.Device.Gpio;
 using System.Device.I2c;
@@ -34,8 +35,12 @@ namespace skullOS
             await Task.Delay(Timeout.Infinite);
         }
 
-        static void Run(Modules modulesToLoad = null)
+        static void Run(Modules modulesToLoad = null, bool shouldCreateDirectory = true)
         {
+            if (shouldCreateDirectory)
+            {
+                FileManager.CreateSkullDirectory();
+            }
             GpioController controller = new();
 
             const int busId = 1;

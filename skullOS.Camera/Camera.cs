@@ -66,7 +66,7 @@ namespace skullOS.Camera
         private void TakePicture(object? sender, EventArgs e)
         {
             Console.WriteLine($"({DateTime.Now}) Picture taken!");
-            device.Capture($"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+            device.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 
         public override void Stop()
