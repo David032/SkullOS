@@ -43,14 +43,14 @@ namespace skullOS
             }
             GpioController controller = new();
 
+            //Need to redo i2c bits
             const int busId = 1;
             I2cConnectionSettings i2cSettings = new(busId, Bme280.DefaultI2cAddress);
             I2cDevice i2cDevice = I2cDevice.Create(i2cSettings);
+            //----
 
             List<ISubSystem> systemsLoaded = LoadModules(modulesToLoad);
-
             SetupModules(systemsLoaded, controller, i2cDevice);
-
             RunModules(systemsLoaded, controller);
         }
 
@@ -93,7 +93,7 @@ namespace skullOS
             List<ISubSystem> subSystems = new();
             if (modulesToLoad == null)
             {
-                modules = new();
+                modules = new Modules();
             }
             else
             {
