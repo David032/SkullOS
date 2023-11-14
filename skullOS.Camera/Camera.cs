@@ -25,18 +25,19 @@ namespace skullOS.Camera
 
         public override bool Setup(GpioController controller, I2cDevice i2CDevice)
         {
-            var settings = SettingsLoader.LoadConfig(@"Data/Settings.txt");
-            var defaultValue = new KeyValuePair<string, string>("", "");
+            FileManager.CreateSubDirectory("Captures");
+            Dictionary<string, string> settings = SettingsLoader.LoadConfig(@"Data/Settings.txt");
+            KeyValuePair<string, string> defaultValue = new("", "");
 
-            var cameraMode = settings
+            KeyValuePair<string, string> cameraMode = settings
                 .Select(x => x)
                 .Where(x => x.Key == "Mode")
                 .FirstOrDefault(defaultValue);
-            var pinToActOn = settings
+            KeyValuePair<string, string> pinToActOn = settings
                 .Select(x => x)
                 .Where(x => x.Key == "Pin")
                 .FirstOrDefault(defaultValue);
-            var ledPin = settings
+            KeyValuePair<string, string> ledPin = settings
                 .Select(x => x)
                 .Where(x => x.Key == "LedPin")
                 .FirstOrDefault(defaultValue);
@@ -66,7 +67,7 @@ namespace skullOS.Camera
         private void TakePicture(object? sender, EventArgs e)
         {
             Console.WriteLine($"({DateTime.Now}) Picture taken!");
-            device.Capture($"{DateTime.Now:yyyyMMddHHmmss}.jpg");
+            device.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 
         public override void Stop()
