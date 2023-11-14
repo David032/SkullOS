@@ -7,10 +7,10 @@
         public static void CreateSkullDirectory()
         {
             DirectoryInfo rootDirectory = null;
-            string pathToPersonalDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string pathToPersonalDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             try
             {
-                rootDirectory = Directory.CreateDirectory(@pathToPersonalDir + "/skullOS", unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+                rootDirectory = Directory.CreateDirectory(@pathToPersonalDir + @"/skullOS", unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
             }
             catch (Exception e)
             {
@@ -22,6 +22,14 @@
         public static string GetSkullDirectory()
         {
             return rootDirectoryPath;
+        }
+
+        public static void CreateSubDirectory(string directoryName)
+        {
+            if (rootDirectoryPath != string.Empty)
+            {
+                Directory.CreateDirectory(@rootDirectoryPath + "/" + directoryName);
+            }
         }
     }
 }
