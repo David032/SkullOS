@@ -20,6 +20,7 @@ namespace skullOS.API.Controllers
             capturesDirectoryInfo = new DirectoryInfo(capturesDirectory);
         }
 
+        #region Get
         [HttpGet("Directory")]
         public string GetDirectory()
         {
@@ -84,6 +85,21 @@ namespace skullOS.API.Controllers
             var file = capturesDirectoryInfo.GetFiles().Where(f => f.Name == fileId).FirstOrDefault();
             var image = System.IO.File.OpenRead(file.FullName);
             return File(image, "video/mp4");
+        }
+        #endregion
+
+        [HttpDelete("Delete")]
+        public bool DeleteCapture(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                return false;
+            }
+            else
+            {
+                System.IO.File.Delete(filePath);
+                return true;
+            }
         }
     }
 }
