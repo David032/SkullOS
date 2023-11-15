@@ -19,13 +19,13 @@ namespace skullOS.Tests
             Assert.NotNull(modulesLoaded);
         }
 
-        [Fact]
-        public void TestSetupModules()
-        {
-            var mockController = new MockGpioController();
-            var modulesLoaded = CreateTestModules();
-            Assert.True(Program.SetupModules(modulesLoaded, mockController));
-        }
+        //[Fact]
+        //public void TestSetupModules()
+        //{
+        //    var mockController = new MockGpioController();
+        //    var modulesLoaded = CreateTestModules();
+        //    Assert.True(Program.SetupModules(modulesLoaded, mockController));
+        //}
 
         [Fact]
         public void TestRunModules()

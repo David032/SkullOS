@@ -1,4 +1,6 @@
-﻿namespace skullOS.Core
+﻿using System.Runtime.InteropServices;
+
+namespace skullOS.Core
 {
     public static class FileManager
     {
@@ -10,7 +12,11 @@
             string pathToPersonalDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             try
             {
-                rootDirectory = Directory.CreateDirectory(@pathToPersonalDir + @"/skullOS", unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    rootDirectory = Directory.CreateDirectory(@pathToPersonalDir + @"/skullOS",
+                        unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+                }
             }
             catch (Exception e)
             {

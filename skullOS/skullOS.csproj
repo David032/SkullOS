@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\CoreSettings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Modules.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
