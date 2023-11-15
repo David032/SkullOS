@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using skullOS.API.Data_Objects;
 using skullOS.Core;
 
 namespace skullOS.API.Controllers
@@ -28,27 +29,45 @@ namespace skullOS.API.Controllers
         [HttpGet("MostRecent")]
         public IActionResult GetNewest()
         {
-            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpeg").OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
+            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg").OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
             var image = System.IO.File.OpenRead(mostRecentImage.FullName);
             return File(image, "image/jpeg");
         }
 
-        [HttpGet("All")] //Not working
-        public List<FileInfo> GetAll()
+        [HttpGet("All")]
+        public List<Capture> GetAll()
         {
-            return capturesDirectoryInfo.GetFiles().ToList();
+            List<Capture> Files = new();
+            foreach (var item in capturesDirectoryInfo.GetFiles())
+            {
+                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString());
+                Files.Add(file);
+            }
+            return Files;
         }
 
-        [HttpGet("AllPictures")] //Returns, but there's nothing in it
-        public List<FileInfo> GetAllPictures()
+        [HttpGet("AllPictures")]
+        public List<Capture> GetAllPictures()
         {
-            return capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpeg").ToList();
+            List<Capture> Files = new();
+            foreach (var item in capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg"))
+            {
+                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString());
+                Files.Add(file);
+            }
+            return Files;
         }
 
-        [HttpGet("AllVideos")] //No videos yet
-        public List<FileInfo> GetAllVideos()
+        [HttpGet("AllVideos")]
+        public List<Capture> GetAllVideos()
         {
-            return capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".mp4").ToList();
+            List<Capture> Files = new();
+            foreach (var item in capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".mp4"))
+            {
+                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString());
+                Files.Add(file);
+            }
+            return Files;
         }
 
         [HttpGet("Image")]
