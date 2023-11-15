@@ -41,6 +41,15 @@ namespace skullOS
             {
                 FileManager.CreateSkullDirectory();
             }
+            var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
+            if (settings.TryGetValue("API", out string useAPI))
+            {
+                if (bool.Parse(useAPI))
+                {
+                    //Start the API here
+                }
+            }
+
             GpioController controller = new();
 
             //Need to redo i2c bits

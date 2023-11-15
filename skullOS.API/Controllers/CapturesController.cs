@@ -14,31 +14,38 @@ namespace skullOS.API.Controllers
         public CapturesController(ILogger<CapturesController> logger)
         {
             _logger = logger;
+            FileManager.CreateSkullDirectory();
             capturesDirectory = @FileManager.GetSkullDirectory() + @"/Captures";
             capturesDirectoryInfo = new DirectoryInfo(capturesDirectory);
+        }
+
+        [HttpGet("Directory")]
+        public string GetDirectory()
+        {
+            return capturesDirectoryInfo.FullName;
         }
 
         [HttpGet("MostRecent")]
         public IActionResult GetNewest()
         {
-            var mostRecentImage = capturesDirectoryInfo.GetFiles().OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
+            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpeg").OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
             var image = System.IO.File.OpenRead(mostRecentImage.FullName);
             return File(image, "image/jpeg");
         }
 
-        [HttpGet("All")]
+        [HttpGet("All")] //Not working
         public List<FileInfo> GetAll()
         {
             return capturesDirectoryInfo.GetFiles().ToList();
         }
 
-        [HttpGet("AllPictures")]
+        [HttpGet("AllPictures")] //Returns, but there's nothing in it
         public List<FileInfo> GetAllPictures()
         {
             return capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpeg").ToList();
         }
 
-        [HttpGet("AllVideos")]
+        [HttpGet("AllVideos")] //No videos yet
         public List<FileInfo> GetAllVideos()
         {
             return capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".mp4").ToList();
