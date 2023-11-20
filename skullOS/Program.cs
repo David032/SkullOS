@@ -1,9 +1,6 @@
-﻿using Iot.Device.Bmxx80;
+﻿using skullOS.Controllers.Buzzer;
 using skullOS.Core;
-using skullOS.Core.Interfaces;
-using System.Device.Gpio;
-using System.Device.I2c;
-using System.Reflection;
+using skullOS.Services;
 
 namespace skullOS
 {
@@ -35,103 +32,39 @@ namespace skullOS
             await Task.Delay(Timeout.Infinite);
         }
 
-        static void Run(Modules modulesToLoad = null, bool shouldCreateDirectory = true)
+        static async void Run(Modules modulesToLoad = null, bool shouldCreateDirectory = true)
         {
             if (shouldCreateDirectory)
             {
                 FileManager.CreateSkullDirectory();
             }
             var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
-            if (settings.TryGetValue("API", out string useAPI))
-            {
-                if (bool.Parse(useAPI))
-                {
-                    //Start the API here
-                }
-            }
+            List<string> controllersToLoad = new List<string>();
 
-            GpioController controller = new();
+            //First load all the hardware services
+            BuzzerService hardwareBuzzer = new(13);
+            //Then the software controllers
+            BuzzerController buzzerController = new(hardwareBuzzer);
+            controllersToLoad.Add("BuzzerController");
+            //API Should be the last thing to be loaded
+            //            if (settings.TryGetValue("API", out string useAPI))
+            //            {
+            //                if (bool.Parse(useAPI))
+            //                {
+            //                    string[] arguments = null;
+            //#if DEBUG
+            //                    arguments[0] = "enviroment=development";
+            //#endif
+            //                    API.ApiApp api = new(arguments, controllersToLoad);
+            //                }
+            //            }
 
-            //Need to redo i2c bits
-            const int busId = 1;
-            I2cConnectionSettings i2cSettings = new(busId, Bme280.DefaultI2cAddress);
-            I2cDevice i2cDevice = I2cDevice.Create(i2cSettings);
-            //----
-
-            List<ISubSystem> systemsLoaded = LoadModules(modulesToLoad);
-            SetupModules(systemsLoaded, controller, i2cDevice);
-            RunModules(systemsLoaded, controller);
-        }
-
-        public static bool RunModules(List<ISubSystem> systemsLoaded, GpioController controller)
-        {
-            foreach (ISubSystem system in systemsLoaded)
-            {
-                system.Run(controller);
-            }
-            return true;
-        }
-
-        public static bool SetupModules(List<ISubSystem> systemsLoaded, GpioController controller, I2cDevice i2CDevice)
-        {
-            foreach (var system in systemsLoaded)
-            {
-
-
-                Console.WriteLine("Setting up " + system.ToString());
-                if (system.ToString().Equals("skullOS.Interlink.Interlink"))
-                {
-                    Console.WriteLine("Giving linker data!");
-                    Interlink.Interlink linker = (Interlink.Interlink)systemsLoaded.Select(x => x).FirstOrDefault(x => x.ToString() == "skullOS.Interlink.Interlink");
-                    linker.subSystems = systemsLoaded;
-                }
-
-
-
-                if (!system.Setup(controller, i2CDevice))
-                {
-                    throw new Exception($"{system} failed to load");
-                }
-            }
-            return true;
-        }
-
-        public static List<ISubSystem> LoadModules(Modules modulesToLoad)
-        {
-            Modules modules;
-            List<ISubSystem> subSystems = new();
-            if (modulesToLoad == null)
-            {
-                modules = new Modules();
-            }
-            else
-            {
-                modules = modulesToLoad;
-            }
-
-            foreach (var item in modules.Get())
-            {
-
-                try
-                {
-                    Assembly system = Assembly.Load("skullOS." + item.ModuleName);
-                    Type systemType = system.DefinedTypes.Where(x => x.Name == item.ModuleName).FirstOrDefault();
-                    object obj = Activator.CreateInstance(systemType, false);
-                    subSystems.Add((ISubSystem)obj);
-                }
-                catch (Exception e)
-                {
-
-                    throw;
-                }
-            }
-
-            return subSystems;
-        }
-
-        void Setup()
-        {
+            //Temp -----
+            buzzerController.PlayTune(0);
+            await Task.Delay(Timeout.Infinite);
 
         }
+
+
     }
 }

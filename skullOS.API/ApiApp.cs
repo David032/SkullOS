@@ -1,9 +1,10 @@
+﻿using System.Reflection;
 
 namespace skullOS.API
 {
-    public class Program
+    public class ApiApp
     {
-        public static void Main(string[] args)
+        public ApiApp(string[] args, List<string> controllers)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,18 @@ namespace skullOS.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.WebHost.UseUrls("http://*:5000;https://*:5001");
+
+
+            Assembly availableControllers = Assembly.Load("skullOS.Controllers");
+            IEnumerable<TypeInfo> definedTypes = availableControllers.DefinedTypes;
+            var definedControllers = definedTypes.Select(x => x).Where(x => x.Name.Contains("Controller"));
+            foreach (var item in controllers)
+            {
+                if (definedControllers.Any(x => x.Name == item))
+                {
+
+                }
+            }
 
             WebApplication app = builder.Build();
 

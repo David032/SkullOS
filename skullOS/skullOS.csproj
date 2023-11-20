@@ -5,13 +5,17 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;ARM32</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\skullOS.Controllers\skullOS.Controllers.csproj" />
     <ProjectReference Include="..\skullOS.Interlink\skullOS.Interlink.csproj" />
     <ProjectReference Include="..\skullOS.Output\skullOS.Output.csproj" />
     <ProjectReference Include="..\skullOS.Camera\skullOS.Camera.csproj" />
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
+    <ProjectReference Include="..\skullOS.API\skullOS.API.csproj" />
+    <ProjectReference Include="..\skullOS.Services\skullOS.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

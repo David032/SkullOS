@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;ARM32</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
+    <ProjectReference Include="..\skullOS.Controllers\skullOS.Controllers.csproj" />
   </ItemGroup>
 
 </Project>
