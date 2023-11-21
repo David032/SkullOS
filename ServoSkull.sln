@@ -50,10 +50,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pinout.md = Pinout.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.API", "skullOS.API\skullOS.API.csproj", "{5E1EC385-4B61-4E8C-82C7-46695A33AC72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.API", "skullOS.API\skullOS.API.csproj", "{5E1EC385-4B61-4E8C-82C7-46695A33AC72}"
 	ProjectSection(ProjectDependencies) = postProject
 		{464B162B-62FC-49CC-A6AB-72DBE959DD8C} = {464B162B-62FC-49CC-A6AB-72DBE959DD8C}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.Modules", "skullOS.Modules\skullOS.Modules.csproj", "{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3CBE1B63-957B-43B6-939D-070EAC517C7C} = {3CBE1B63-957B-43B6-939D-070EAC517C7C}
+		{464B162B-62FC-49CC-A6AB-72DBE959DD8C} = {464B162B-62FC-49CC-A6AB-72DBE959DD8C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skullOS.HardwareServices", "skullOS.HardwareServices\skullOS.HardwareServices.csproj", "{3CBE1B63-957B-43B6-939D-070EAC517C7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +117,14 @@ Global
 		{5E1EC385-4B61-4E8C-82C7-46695A33AC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E1EC385-4B61-4E8C-82C7-46695A33AC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E1EC385-4B61-4E8C-82C7-46695A33AC72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CBE1B63-957B-43B6-939D-070EAC517C7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBE1B63-957B-43B6-939D-070EAC517C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CBE1B63-957B-43B6-939D-070EAC517C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBE1B63-957B-43B6-939D-070EAC517C7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
