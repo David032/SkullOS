@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace skullOS.Modules
+﻿namespace skullOS.Modules
 {
-    internal class QrCodeReader
+    public class QrCodeReader : Module, IQrCodeReaderModule
     {
+        public override void OnAction(string[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnEnable(string[] args)
+        {
+            throw new NotImplementedException();
+        }
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

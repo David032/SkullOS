@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using skullOS.Modules.Interfaces;
 
 namespace skullOS.Modules
 {
-    internal class Uplink
+    public class Uplink : Module, IUplinkModule
     {
+        public override void OnAction(string[] args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnEnable(string[] args)
+        {
+            throw new NotImplementedException();
+        }
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

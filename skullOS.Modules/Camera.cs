@@ -37,5 +37,35 @@ namespace skullOS.Modules
             CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
             MicrophoneService.Microphone.Record(30, audioLocation);
         }
+
+        public override void OnEnable(string[] args)
+        {
+            if (Enum.TryParse(args[0], out CameraMode mode))
+            {
+                CameraMode = mode;
+            }
+        }
+
+        public override void OnAction(string[] args)
+        {
+            switch (CameraMode)
+            {
+                case CameraMode.Image:
+                    TakePicture();
+                    break;
+                case CameraMode.ShortVideo:
+                    RecordShortVideo();
+                    break;
+                case CameraMode.ContinuousVideo:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override string ToString()
+        {
+            return "Camera";
+        }
     }
 }

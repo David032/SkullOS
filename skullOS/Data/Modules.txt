@@ -1,3 +1,6 @@
 ﻿Camera = True
-Output = True
-Interlink = True
+Downlink = True
+Uplink = True
+Prop = True
+QrCodeReader = True
+

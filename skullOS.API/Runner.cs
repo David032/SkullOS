@@ -1,9 +1,8 @@
-
-namespace skullOS.API
+﻿namespace skullOS.API
 {
-    public class Program
+    public class Runner
     {
-        public static void Main(string[] args)
+        public Task StartWebAPI(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +34,7 @@ namespace skullOS.API
 
             app.MapControllers();
 
-            Task webAPIStatus = app.RunAsync();
+            return app.RunAsync();
         }
     }
 }
