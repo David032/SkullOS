@@ -1,8 +1,8 @@
-﻿using skullOS.API;
-using skullOS.Core;
+﻿using skullOS.Core;
 using System.Device.Gpio;
 using System.Reflection;
 using Module = skullOS.Modules.Module;
+using Runner = skullOS.API.Runner;
 
 namespace skullOS
 {
@@ -36,22 +36,27 @@ namespace skullOS
 
         static void Run(bool shouldCreateDirectory = true)
         {
-            DeviceManager manager = new();
+            SkullLogger logger = new();
+            GpioController controller = new();
+            DeviceManager deviceManager = new(controller);
+            InputManager inputManager = new();
+
             if (shouldCreateDirectory)
             {
                 FileManager.CreateSkullDirectory();
             }
             var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
-            GpioController controller = new();
 
             //Enable API
             if (settings.TryGetValue("API", out string useAPI))
             {
+                logger.LogMessage("Enabling API...");
                 if (bool.Parse(useAPI))
                 {
                     Runner apiRunner = new();
                     Task apiStatus = apiRunner.StartWebAPI(null);
-                    manager.AttachApi(apiStatus);
+                    deviceManager.AttachApi(apiStatus);
+                    logger.LogMessage("API enabled");
                 }
             }
 
@@ -59,17 +64,25 @@ namespace skullOS
             List<Module> modules = new();
             Assembly ModulesLibrary = Assembly.Load("skullOS.Modules");
             var modulesToLoad = SettingsLoader.LoadConfig(@"Data/Modules.txt");
+            foreach (var item in ModulesLibrary.DefinedTypes)
+            {
+                Console.WriteLine("Modules library contains: " + item.Name);
+            }
             foreach (var item in modulesToLoad)
             {
+                logger.LogMessage("Checking: " + item.Key);
                 if (bool.Parse(item.Value))
                 {
+                    logger.LogMessage("Attempting to load " + item.Key); //Can't seem to find the camera
                     Type moduleClass = ModulesLibrary.GetType(item.Key);
                     Module? module = Activator.CreateInstance(moduleClass) as Module;
                     modules.Add(module);
                 }
             }
-            manager.AttachModules(modules);
+            deviceManager.AttachModules(modules);
 
+            //Setup input options
+            inputManager.SetupSelector(deviceManager.GetModules());
         }
     }
 }

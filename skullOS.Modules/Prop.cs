@@ -2,7 +2,7 @@
 {
     public class Prop : Module, IPropModule
     {
-        public override void OnAction(string[] args)
+        public override void OnAction(object? sender, EventArgs e)
         {
             throw new NotImplementedException();
         }

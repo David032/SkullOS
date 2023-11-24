@@ -46,7 +46,12 @@ namespace skullOS.Modules
             }
         }
 
-        public override void OnAction(string[] args)
+        public override string ToString()
+        {
+            return "Camera";
+        }
+
+        public override void OnAction(object? sender, EventArgs e)
         {
             switch (CameraMode)
             {
@@ -61,11 +66,6 @@ namespace skullOS.Modules
                 default:
                     break;
             }
-        }
-
-        public override string ToString()
-        {
-            return "Camera";
         }
     }
 }

@@ -24,6 +24,10 @@ namespace skullOS
             Modules = modules;
         }
 
+        public List<Module> GetModules()
+        {
+            return Modules;
+        }
 
     }
 }

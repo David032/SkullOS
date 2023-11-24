@@ -4,7 +4,7 @@ namespace skullOS.Modules
 {
     public class Uplink : Module, IUplinkModule
     {
-        public override void OnAction(string[] args)
+        public override void OnAction(object? sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
