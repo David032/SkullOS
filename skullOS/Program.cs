@@ -10,6 +10,11 @@ namespace skullOS
     {
         public static async Task Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("No arguments provided!");
+                Environment.Exit(-1);
+            }
             string input = args[0].ToLower();
             switch (input)
             {
@@ -36,15 +41,16 @@ namespace skullOS
 
         static void Run(bool shouldCreateDirectory = true)
         {
+            if (shouldCreateDirectory)
+            {
+                FileManager.CreateSkullDirectory();
+            }
+
             SkullLogger logger = new();
             GpioController controller = new();
             DeviceManager deviceManager = new(controller);
             InputManager inputManager = new();
 
-            if (shouldCreateDirectory)
-            {
-                FileManager.CreateSkullDirectory();
-            }
             var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
 
             //Enable API
@@ -74,9 +80,9 @@ namespace skullOS
                 if (bool.Parse(item.Value))
                 {
                     logger.LogMessage("Attempting to load " + item.Key); //Can't seem to find the camera
-                    Type moduleClass = ModulesLibrary.GetType(item.Key);
-                    Module? module = Activator.CreateInstance(moduleClass) as Module;
-                    modules.Add(module);
+                    Type moduleClass = ModulesLibrary.DefinedTypes.Where(x => x.Name == item.Key).FirstOrDefault();
+                    object? module = Activator.CreateInstance(moduleClass);
+                    modules.Add((Module)module);
                 }
             }
             deviceManager.AttachModules(modules);

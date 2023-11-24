@@ -1,6 +1,6 @@
-﻿Camera = True
-Downlink = True
-Uplink = True
-Prop = True
-QrCodeReader = True
+﻿Camera=True
+Downlink=True
+Uplink=True
+Prop=True
+QrCodeReader=True
 

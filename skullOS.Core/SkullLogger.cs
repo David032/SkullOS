@@ -6,7 +6,7 @@
         public SkullLogger()
         {
             string fileName = DateTime.Now.ToString("yyyyMMddHHmmss");
-            filepath = FileManager.GetSkullDirectory() + @"\" + fileName + ".txt";
+            filepath = FileManager.GetSkullDirectory() + @"/" + fileName + ".txt";
         }
 
 
@@ -15,7 +15,7 @@
 #if DEBUG
             Console.WriteLine(message);
 #endif
-            File.AppendAllText(filepath, message);
+            File.AppendAllText(filepath + "\n", message);
         }
     }
 }
