@@ -261,7 +261,7 @@ namespace skullOS.Modules
         /// <summary>
         /// Represents all twelve notes.
         /// </summary>
-        internal enum Note
+        public enum Note
         {
             C = 1,
             Db = 2,
@@ -280,7 +280,7 @@ namespace skullOS.Modules
         /// <summary>
         /// Represents music octave.
         /// </summary>
-        internal enum Octave
+        public enum Octave
         {
             First = 1,
             Second = 2,
@@ -295,7 +295,7 @@ namespace skullOS.Modules
         /// <summary>
         /// Represents music note duration.
         /// </summary>
-        internal enum Duration
+        public enum Duration
         {
             Whole = 1,
             Half = 2,

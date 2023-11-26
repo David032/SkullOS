@@ -3,4 +3,4 @@ Downlink=True
 Uplink=True
 Prop=True
 QrCodeReader=True
-
+Buzzer=True

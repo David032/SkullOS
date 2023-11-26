@@ -1,0 +1,28 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using skullOS.Modules.Interfaces;
+using static skullOS.Modules.BuzzerLibrary;
+
+namespace skullOS.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BuzzerController : ControllerBase
+    {
+        private readonly ILogger<BuzzerController> _logger;
+        private IBuzzerModule _module;
+
+        public BuzzerController(ILogger<BuzzerController> logger, IBuzzerModule buzzer)
+        {
+            _logger = logger;
+            _module = buzzer;
+        }
+
+        public string PlayTune(string tune)
+        {
+            Tunes tuneToPlay = (Tunes)Enum.Parse(typeof(Tunes), tune);
+            _module.PlayTune(tuneToPlay);
+            return "Playing " + tuneToPlay.ToString();
+        }
+
+    }
+}

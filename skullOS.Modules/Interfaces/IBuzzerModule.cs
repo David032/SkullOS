@@ -1,6 +1,7 @@
 ﻿namespace skullOS.Modules.Interfaces
 {
-    internal interface IBuzzerModule
+    public interface IBuzzerModule
     {
+        void PlayTune(BuzzerLibrary.Tunes tuneToPlay);
     }
 }

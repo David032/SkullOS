@@ -1,6 +1,8 @@
 ﻿namespace skullOS.Modules.Interfaces
 {
-    internal interface ICameraModule
+    public interface ICameraModule
     {
+        void RecordShortVideo();
+        void TakePicture();
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace skullOS.API
+﻿using skullOS.Modules;
+using skullOS.Modules.Interfaces;
+
+namespace skullOS.API
 {
     public class Runner
     {
@@ -13,6 +16,11 @@
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.WebHost.UseUrls("http://*:5000;https://*:5001");
+
+            #region Skull Modules
+            builder.Services.AddScoped<ICameraModule, Camera>();
+            builder.Services.AddScoped<IBuzzerModule, Buzzer>();
+            #endregion
 
 
             var app = builder.Build();

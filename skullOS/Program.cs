@@ -60,8 +60,13 @@ namespace skullOS
                 logger.LogMessage("Enabling API...");
                 if (bool.Parse(useAPI))
                 {
+                    string[] arguments = new string[1];
+#if DEBUG
+                    arguments[0] = "environment=development";
+                    logger.LogMessage("Set first argument to " + arguments[0]);
+#endif
                     Runner apiRunner = new();
-                    Task apiStatus = apiRunner.StartWebAPI(null);
+                    Task apiStatus = apiRunner.StartWebAPI(arguments);
                     deviceManager.AttachApi(apiStatus);
                     logger.LogMessage("API enabled");
                 }

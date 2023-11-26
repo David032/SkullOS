@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
+    <ProjectReference Include="..\skullOS.Modules\skullOS.Modules.csproj" />
   </ItemGroup>
 
 </Project>
