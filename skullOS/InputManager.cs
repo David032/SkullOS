@@ -11,6 +11,7 @@ namespace skullOS
         int actionButtonPin = 25;
         private List<GpioButton>? Buttons;
         private Module? activeModule;
+        private SkullLogger? logger;
 
         public InputManager()
         {
@@ -28,12 +29,14 @@ namespace skullOS
             {
                 //One input means no selector
                 string moduleToLoad;
-                string[] args = Array.Empty<string>();
+                string[] args = new string[1];
                 var match = Regex.Match(inputs.Keys.First(), @"[(]\w*[)]");
                 if (match.Success)
                 {
                     moduleToLoad = inputs.Keys.First().Split('(')[0];
-                    args.SetValue(match.Groups[0].Value, 0);
+                    char[] charsToRemove = { '(', ')' };
+                    args.SetValue(match.Groups[0].Value.Trim(charsToRemove), 0);
+                    logger.LogMessage("Set argument to " + match.Groups[0].Value.Trim(charsToRemove));
                 }
                 else
                 {
@@ -52,9 +55,15 @@ namespace skullOS
 
         public void SetActiveModule(Module moduleToLoad, string[] args = null)
         {
+            logger.LogMessage("Setting " + moduleToLoad.ToString() + " as the active module");
             moduleToLoad.OnEnable(args);
             ActionButton.Press += moduleToLoad.OnAction;
             activeModule = moduleToLoad;
+        }
+
+        public void attachLogger(SkullLogger skullLogger)
+        {
+            logger = skullLogger;
         }
     }
 }

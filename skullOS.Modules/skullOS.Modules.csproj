@@ -10,5 +10,15 @@
     <ProjectReference Include="..\skullOS.HardwareServices\skullOS.HardwareServices.csproj" />
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\CameraSettings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>

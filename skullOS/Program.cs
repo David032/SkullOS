@@ -50,6 +50,7 @@ namespace skullOS
             GpioController controller = new();
             DeviceManager deviceManager = new(controller);
             InputManager inputManager = new();
+            inputManager.attachLogger(logger);
 
             var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
 
@@ -79,10 +80,12 @@ namespace skullOS
                 logger.LogMessage("Checking: " + item.Key);
                 if (bool.Parse(item.Value))
                 {
-                    logger.LogMessage("Attempting to load " + item.Key); //Can't seem to find the camera
+                    logger.LogMessage("Attempting to load " + item.Key);
                     Type moduleClass = ModulesLibrary.DefinedTypes.Where(x => x.Name == item.Key).FirstOrDefault();
-                    object? module = Activator.CreateInstance(moduleClass);
-                    modules.Add((Module)module);
+                    object? moduleObj = Activator.CreateInstance(moduleClass);
+                    Module module = moduleObj as Module;
+                    module.AttachLogger(logger);
+                    modules.Add(module);
                 }
             }
             deviceManager.AttachModules(modules);

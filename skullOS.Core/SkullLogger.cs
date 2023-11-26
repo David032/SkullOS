@@ -5,17 +5,17 @@
         string filepath;
         public SkullLogger()
         {
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss");
-            filepath = FileManager.GetSkullDirectory() + @"/" + fileName + ".txt";
+            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt";
+            FileManager.CreateSubDirectory("logs");
+            filepath = FileManager.GetSkullDirectory() + "/logs/" + fileName;
         }
-
 
         public void LogMessage(string message)
         {
 #if DEBUG
             Console.WriteLine(message);
 #endif
-            File.AppendAllText(filepath + "\n", message);
+            File.AppendAllText(filepath, DateTime.Now.ToShortTimeString() + ":" + message + "\n");
         }
     }
 }
