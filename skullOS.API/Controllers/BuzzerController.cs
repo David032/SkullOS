@@ -4,7 +4,7 @@ using static skullOS.Modules.BuzzerLibrary;
 
 namespace skullOS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Buzzer")]
     [ApiController]
     public class BuzzerController : ControllerBase
     {
@@ -17,6 +17,7 @@ namespace skullOS.API.Controllers
             _module = buzzer;
         }
 
+        [HttpGet("PlayTune")]
         public string PlayTune(string tune)
         {
             Tunes tuneToPlay = (Tunes)Enum.Parse(typeof(Tunes), tune);

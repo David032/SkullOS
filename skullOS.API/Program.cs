@@ -1,3 +1,5 @@
+using skullOS.Modules;
+using skullOS.Modules.Interfaces;
 
 namespace skullOS.API
 {
@@ -15,6 +17,10 @@ namespace skullOS.API
             builder.Services.AddSwaggerGen();
             builder.WebHost.UseUrls("http://*:5000;https://*:5001");
 
+            #region Skull Modules
+            builder.Services.AddScoped<ICameraModule, Camera>();
+            builder.Services.AddScoped<IBuzzerModule, Buzzer>();
+            #endregion
 
             var app = builder.Build();
 
@@ -35,7 +41,7 @@ namespace skullOS.API
 
             app.MapControllers();
 
-            Task webAPIStatus = app.RunAsync();
+            app.Run();
         }
     }
 }

@@ -3,7 +3,7 @@ using skullOS.Modules.Interfaces;
 
 namespace skullOS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Camera")]
     [ApiController]
     public class CameraController : ControllerBase
     {
@@ -16,14 +16,14 @@ namespace skullOS.API.Controllers
             _module = camera;
         }
 
-        [HttpGet]
+        [HttpGet("TakePicture")]
         public string TakePicture()
         {
             _module.TakePicture();
             return "Picture Taken!";
         }
 
-        [HttpGet]
+        [HttpGet("RecordVideo")]
         public string RecordVideo()
         {
             _module.RecordShortVideo();

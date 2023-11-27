@@ -1,8 +1,8 @@
-﻿using skullOS.Core;
+﻿using skullOS.API;
+using skullOS.Core;
 using System.Device.Gpio;
 using System.Reflection;
 using Module = skullOS.Modules.Module;
-using Runner = skullOS.API.Runner;
 
 namespace skullOS
 {
@@ -65,9 +65,12 @@ namespace skullOS
                     arguments[0] = "environment=development";
                     logger.LogMessage("Set first argument to " + arguments[0]);
 #endif
+                    //Replace this with something that calls the api seperatley
+
                     Runner apiRunner = new();
-                    Task apiStatus = apiRunner.StartWebAPI(arguments);
-                    deviceManager.AttachApi(apiStatus);
+                    //Task apiStatus = apiRunner.StartWebApiTask(arguments);
+                    //deviceManager.AttachApi(apiStatus);
+                    apiRunner.StartWebApi(arguments);
                     logger.LogMessage("API enabled");
                 }
             }
