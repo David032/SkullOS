@@ -43,7 +43,7 @@ namespace skullOS.Modules
 
         public void TakePicture()
         {
-            logger.LogMessage($"({DateTime.Now}) Picture taken!"); //Maybe think about a better logging solution?
+            LogMessage($"({DateTime.Now}) Picture taken!");
             CameraService.Camera.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 

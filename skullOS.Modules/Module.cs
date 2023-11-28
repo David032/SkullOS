@@ -12,5 +12,13 @@ namespace skullOS.Modules
         {
             this.logger = logger;
         }
+
+        public void LogMessage(string message)
+        {
+            if (logger != null)
+            {
+                logger.LogMessage(message);
+            }
+        }
     }
 }
