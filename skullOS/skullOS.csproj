@@ -5,17 +5,21 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\skullOS.Interlink\skullOS.Interlink.csproj" />
-    <ProjectReference Include="..\skullOS.Output\skullOS.Output.csproj" />
-    <ProjectReference Include="..\skullOS.Camera\skullOS.Camera.csproj" />
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
+    <ProjectReference Include="..\skullOS.HardwareServices\skullOS.HardwareServices.csproj" />
+    <ProjectReference Include="..\skullOS.Modules\skullOS.Modules.csproj" />
+    <ProjectReference Include="..\skullOS.API\skullOS.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Data\CoreSettings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\InputSettings.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\Modules.txt">

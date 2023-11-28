@@ -1,9 +1,7 @@
-﻿using Iot.Device.Bmxx80;
-using skullOS.Core;
-using skullOS.Core.Interfaces;
+﻿using skullOS.Core;
 using System.Device.Gpio;
-using System.Device.I2c;
 using System.Reflection;
+using Module = skullOS.Modules.Module;
 
 namespace skullOS
 {
@@ -11,6 +9,11 @@ namespace skullOS
     {
         public static async Task Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("No arguments provided!");
+                Environment.Exit(-1);
+            }
             string input = args[0].ToLower();
             switch (input)
             {
@@ -35,103 +38,64 @@ namespace skullOS
             await Task.Delay(Timeout.Infinite);
         }
 
-        static void Run(Modules modulesToLoad = null, bool shouldCreateDirectory = true)
+        static void Run(bool shouldCreateDirectory = true)
         {
             if (shouldCreateDirectory)
             {
                 FileManager.CreateSkullDirectory();
             }
+
+            SkullLogger logger = new();
+            GpioController controller = new();
+            DeviceManager deviceManager = new(controller);
+            InputManager inputManager = new();
+            inputManager.attachLogger(logger);
+
             var settings = SettingsLoader.LoadConfig(@"Data/CoreSettings.txt");
+
+            //Enable API
             if (settings.TryGetValue("API", out string useAPI))
             {
+                logger.LogMessage("Enabling API...");
                 if (bool.Parse(useAPI))
                 {
-                    //Start the API here
+                    string[] arguments = new string[1];
+#if DEBUG
+                    arguments[0] = "environment=development";
+                    logger.LogMessage("Set first argument to " + arguments[0]);
+#endif
+                    //Replace this with something that calls the api as a seperate program
+
+
+                    logger.LogMessage("API enabled");
                 }
             }
 
-            GpioController controller = new();
-
-            //Need to redo i2c bits
-            const int busId = 1;
-            I2cConnectionSettings i2cSettings = new(busId, Bme280.DefaultI2cAddress);
-            I2cDevice i2cDevice = I2cDevice.Create(i2cSettings);
-            //----
-
-            List<ISubSystem> systemsLoaded = LoadModules(modulesToLoad);
-            SetupModules(systemsLoaded, controller, i2cDevice);
-            RunModules(systemsLoaded, controller);
-        }
-
-        public static bool RunModules(List<ISubSystem> systemsLoaded, GpioController controller)
-        {
-            foreach (ISubSystem system in systemsLoaded)
+            //Load Modules
+            List<Module> modules = new();
+            Assembly ModulesLibrary = Assembly.Load("skullOS.Modules");
+            var modulesToLoad = SettingsLoader.LoadConfig(@"Data/Modules.txt");
+            foreach (var item in ModulesLibrary.DefinedTypes)
             {
-                system.Run(controller);
+                Console.WriteLine("Modules library contains: " + item.Name);
             }
-            return true;
-        }
-
-        public static bool SetupModules(List<ISubSystem> systemsLoaded, GpioController controller, I2cDevice i2CDevice)
-        {
-            foreach (var system in systemsLoaded)
+            foreach (var item in modulesToLoad)
             {
-
-
-                Console.WriteLine("Setting up " + system.ToString());
-                if (system.ToString().Equals("skullOS.Interlink.Interlink"))
+                logger.LogMessage("Checking: " + item.Key);
+                if (bool.Parse(item.Value))
                 {
-                    Console.WriteLine("Giving linker data!");
-                    Interlink.Interlink linker = (Interlink.Interlink)systemsLoaded.Select(x => x).FirstOrDefault(x => x.ToString() == "skullOS.Interlink.Interlink");
-                    linker.subSystems = systemsLoaded;
-                }
-
-
-
-                if (!system.Setup(controller, i2CDevice))
-                {
-                    throw new Exception($"{system} failed to load");
+                    logger.LogMessage("Attempting to load " + item.Key);
+                    Type moduleClass = ModulesLibrary.DefinedTypes.Where(x => x.Name == item.Key).FirstOrDefault();
+                    object? moduleObj = Activator.CreateInstance(moduleClass);
+                    Module module = moduleObj as Module;
+                    module.AttachLogger(logger);
+                    modules.Add(module);
                 }
             }
-            return true;
-        }
+            deviceManager.AttachModules(modules);
 
-        public static List<ISubSystem> LoadModules(Modules modulesToLoad)
-        {
-            Modules modules;
-            List<ISubSystem> subSystems = new();
-            if (modulesToLoad == null)
-            {
-                modules = new Modules();
-            }
-            else
-            {
-                modules = modulesToLoad;
-            }
-
-            foreach (var item in modules.Get())
-            {
-
-                try
-                {
-                    Assembly system = Assembly.Load("skullOS." + item.ModuleName);
-                    Type systemType = system.DefinedTypes.Where(x => x.Name == item.ModuleName).FirstOrDefault();
-                    object obj = Activator.CreateInstance(systemType, false);
-                    subSystems.Add((ISubSystem)obj);
-                }
-                catch (Exception e)
-                {
-
-                    throw;
-                }
-            }
-
-            return subSystems;
-        }
-
-        void Setup()
-        {
-
+            //Setup input options
+            inputManager.SetupSelector(deviceManager.GetModules());
         }
     }
 }
