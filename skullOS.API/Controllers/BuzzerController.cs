@@ -25,5 +25,11 @@ namespace skullOS.API.Controllers
             return "Playing " + tuneToPlay.ToString();
         }
 
+        [HttpGet("Tunes")]
+        public List<string> AvailableTunes()
+        {
+            List<string> tunes = Enum.GetNames(typeof(Tunes)).ToList();
+            return tunes;
+        }
     }
 }

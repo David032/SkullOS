@@ -22,11 +22,11 @@ namespace skullOS.Modules
             switch (tuneToPlay)
             {
                 case Tunes.HappyBirthday:
-                    logger.LogMessage("Playing Happy Birthday on the buzzer");
+                    LogMessage("Playing Happy Birthday on the buzzer");
                     Player.Play(happyBirthday, 100);
                     break;
                 case Tunes.AlphabetSong:
-                    logger.LogMessage("Playing the alphabet song on the buzzer");
+                    LogMessage("Playing the alphabet song on the buzzer");
                     Player.Play(alphabetSong, 100);
                     break;
             }
