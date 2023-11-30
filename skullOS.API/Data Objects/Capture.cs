@@ -3,18 +3,14 @@
     public class Capture
     {
         private string filename;
+        private string date;
         private string time;
 
-        public Capture(string Name, string time)
+        public Capture(string Name, string time, string date = null)
         {
             filename = Name;
+            this.date = date;
             this.time = time;
-        }
-
-        public Capture(string Name, DateTime time)
-        {
-            filename = Name;
-            this.time = time.ToShortTimeString();
         }
 
         public string Time
@@ -29,5 +25,10 @@
             set { filename = value; }
         }
 
+        public string Date
+        {
+            get { return date; }
+            set { date = value; }
+        }
     }
 }

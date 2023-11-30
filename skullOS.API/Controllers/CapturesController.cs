@@ -41,8 +41,19 @@ namespace skullOS.API.Controllers
             List<Capture> Files = new();
             foreach (var item in capturesDirectoryInfo.GetFiles())
             {
-                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString());
+                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString(), item.CreationTime.ToShortDateString());
                 Files.Add(file);
+            }
+            return Files;
+        }
+
+        [HttpGet("AllCaptures")]
+        public List<string> GetAllCaptures()
+        {
+            List<string> Files = new();
+            foreach (var item in capturesDirectoryInfo.GetFiles())
+            {
+                Files.Add(item.Name);
             }
             return Files;
         }
@@ -65,7 +76,7 @@ namespace skullOS.API.Controllers
             List<Capture> Files = new();
             foreach (var item in capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".mp4"))
             {
-                Capture file = new(item.FullName, item.CreationTime.ToShortTimeString());
+                Capture file = new(item.Name, item.CreationTime.ToShortTimeString());
                 Files.Add(file);
             }
             return Files;
@@ -100,6 +111,13 @@ namespace skullOS.API.Controllers
                 System.IO.File.Delete(filePath);
                 return true;
             }
+        }
+        [HttpDelete("DeleteMostRecent")]
+        public void DeleteMostRecent()
+        {
+            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg")
+                .OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
+            mostRecentImage.Delete();
         }
     }
 }
