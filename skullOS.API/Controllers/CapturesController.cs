@@ -47,6 +47,17 @@ namespace skullOS.API.Controllers
             return Files;
         }
 
+        [HttpGet("AllCaptures")]
+        public List<string> GetAllCaptures()
+        {
+            List<string> Files = new();
+            foreach (var item in capturesDirectoryInfo.GetFiles())
+            {
+                Files.Add(item.Name);
+            }
+            return Files;
+        }
+
         [HttpGet("AllPictures")]
         public List<Capture> GetAllPictures()
         {

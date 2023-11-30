@@ -8,14 +8,15 @@ using UnityEngine.UI;
 public class GalleryController : MonoBehaviour
 {
     public GameObject displayElement;
-    List<Capture> Captures = new List<Capture>();
+    public List<string> captures = new List<string>();
+    public CaptureList CaptureList = new CaptureList();
     List<GameObject> DisplayElements = new List<GameObject>();
 
     GameObject objectBeingCreated;
     // Start is called before the first frame update
     void Start()
     {
-        PopulateDisplay();
+
     }
 
     // Update is called once per frame
@@ -24,41 +25,59 @@ public class GalleryController : MonoBehaviour
 
     }
 
-    void PopulateDisplay()
+    public void PopulateGallery()
     {
-        StartCoroutine(GetCaptures());
-        foreach (Capture capture in Captures)
+        CaptureList = new CaptureList();
+        StartCoroutine(PopulateDisplay());
+    }
+
+    public void ClearGallery()
+    {
+        foreach (var item in DisplayElements)
+        {
+            Destroy(item);
+        }
+        CaptureList = null;
+    }
+
+    IEnumerator PopulateDisplay()
+    {
+        yield return StartCoroutine(GetCaptures());
+        foreach (string capture in CaptureList.Captures)
         {
             var go = Instantiate(displayElement);
+            go.transform.SetParent(transform, false);
+            go.transform.localScale = Vector3.one;
             DisplayElements.Add(go);
             objectBeingCreated = go;
-            var fileparts = capture.filename.Split('/');
 
-            StartCoroutine(SetupElement(fileparts[^1]));
+            yield return StartCoroutine(SetupElement(capture));
         }
+        yield return null;
     }
 
     IEnumerator GetCaptures()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get("http://servoskull.local:5000/Captures/All"))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get("http://servoskull.local:5000/Captures/AllCaptures"))
         {
             yield return webRequest.SendWebRequest();
             var result = webRequest.downloadHandler.text;
             result = fixJson(result);
             print(result);
-            Captures = JsonUtility.FromJson<List<Capture>>(result);
-            print(Captures);
+
+
+            CaptureList.rawData = result;
+            JsonUtility.FromJsonOverwrite(result, CaptureList);
+            print(CaptureList.Captures.Count);
         }
     }
 
     //id is filename+extension
     IEnumerator SetupElement(string id)
     {
-        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture("http://servoskull.local:5000/Captures/Image" + id))
+        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture("http://servoskull.local:5000/Captures/Image/?fileId=" + id))
         {
             yield return webRequest.SendWebRequest();
-            print(webRequest.url);
-            print(webRequest.result);
             var texture = DownloadHandlerTexture.GetContent(webRequest);
             objectBeingCreated.GetComponent<RawImage>().texture = texture;
         }
@@ -69,6 +88,13 @@ public class GalleryController : MonoBehaviour
         value = "{\"Captures\":" + value + "}";
         return value;
     }
+}
+
+[Serializable]
+public class CaptureList
+{
+    public string rawData;
+    public List<string> Captures = new List<string>();
 }
 
 

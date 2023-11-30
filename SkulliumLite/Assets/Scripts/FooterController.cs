@@ -23,17 +23,23 @@ public class FooterController : MonoBehaviour
         MainMenu.SetActive(true);
         Gallery.SetActive(false);
         BuzzerController.SetActive(false);
+
+        Gallery.GetComponent<GalleryController>().ClearGallery();
     }
     public void ShowGallery()
     {
         MainMenu.SetActive(false);
         Gallery.SetActive(true);
         BuzzerController.SetActive(false);
+
+        Gallery.GetComponent<GalleryController>().PopulateGallery();
     }
     public void ShowBuzzerController()
     {
         MainMenu.SetActive(false);
         Gallery.SetActive(false);
         BuzzerController.SetActive(true);
+
+        Gallery.GetComponent<GalleryController>().ClearGallery();
     }
 }
