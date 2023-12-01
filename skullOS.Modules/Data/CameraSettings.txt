@@ -1,1 +1,2 @@
 UseMic=False
+CameraLight=26

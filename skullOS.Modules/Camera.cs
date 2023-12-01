@@ -15,6 +15,7 @@ namespace skullOS.Modules
     {
         public CameraService CameraService;
         public MicrophoneService MicrophoneService;
+        public LedService LedService;
         public CameraMode CameraMode = CameraMode.Image;
 
         bool useMic = false;
@@ -39,11 +40,26 @@ namespace skullOS.Modules
                     }
                 }
             }
+            if (cameraSettings.ContainsKey("CameraLight"))
+            {
+                if (cameraSettings.TryGetValue("CameraLight", out string lightPin))
+                {
+                    Dictionary<string, int> pins = new Dictionary<string, int>
+                    {
+                        { "CameraLight", int.Parse(lightPin) }
+                    };
+                    LedService = new LedService(pins);
+                }
+            }
         }
 
         public void TakePicture()
         {
             LogMessage($"({DateTime.Now}) Picture taken!");
+            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+            {
+                LedService.BlinkLight("CameraLight");
+            }
             CameraService.Camera.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 
