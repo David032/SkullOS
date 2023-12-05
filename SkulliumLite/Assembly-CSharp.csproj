@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\FooterController.cs" />
     <Compile Include="Assets\Scripts\BuzzerController.cs" />
     <Compile Include="Assets\Scripts\MainMenuDriver.cs" />
+    <Compile Include="Assets\Scripts\URLS.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -42,7 +42,7 @@ public class BuzzerController : MonoBehaviour
 
     IEnumerator SendTuneRequest()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get("http://servoskull.local:5000/Buzzer/PlayTune?tune=" + tuneInt))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(URLS.BaseUrl() + "Buzzer/PlayTune?tune=" + tuneInt))
         {
             yield return webRequest.SendWebRequest();
         }

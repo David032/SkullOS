@@ -13,7 +13,7 @@ public class Deleter : MonoBehaviour
 
     IEnumerator DeleteElement()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Delete("http://servoskull.local:5000/Captures/Delete?filePath=" + idToDelete))
+        using (UnityWebRequest webRequest = UnityWebRequest.Delete(URLS.BaseUrl() + "Captures/Delete?filePath=" + idToDelete))
         {
             yield return webRequest.SendWebRequest();
         }

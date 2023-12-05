@@ -31,7 +31,7 @@ public class MainMenuDriver : MonoBehaviour
 
     IEnumerator GetLatestImage()
     {
-        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture("http://servoskull.local:5000/Captures/MostRecent"))
+        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(URLS.BaseUrl() + "Captures/MostRecent"))
         {
             yield return webRequest.SendWebRequest();
             print(webRequest.url);
@@ -43,7 +43,7 @@ public class MainMenuDriver : MonoBehaviour
 
     IEnumerator DeleteLatestImage()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Delete("http://servoskull.local:5000/Captures/DeleteMostRecent"))
+        using (UnityWebRequest webRequest = UnityWebRequest.Delete(URLS.BaseUrl() + "Captures/DeleteMostRecent"))
         {
             yield return webRequest.SendWebRequest();
         }

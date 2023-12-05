@@ -58,7 +58,7 @@ public class GalleryController : MonoBehaviour
 
     IEnumerator GetCaptures()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get("http://servoskull.local:5000/Captures/AllCaptures"))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(URLS.BaseUrl() + "Captures/AllCaptures"))
         {
             yield return webRequest.SendWebRequest();
             var result = webRequest.downloadHandler.text;
@@ -75,7 +75,7 @@ public class GalleryController : MonoBehaviour
     //id is filename+extension
     IEnumerator SetupElement(string id)
     {
-        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture("http://servoskull.local:5000/Captures/Image/?fileId=" + id))
+        using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(URLS.BaseUrl() + "/ Captures/Image/?fileId=" + id))
         {
             yield return webRequest.SendWebRequest();
             var texture = DownloadHandlerTexture.GetContent(webRequest);
