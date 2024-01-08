@@ -6,16 +6,24 @@ namespace skullOS.Core
     {
         private static string rootDirectoryPath = string.Empty;
 
-        public static void CreateSkullDirectory()
+        public static void CreateSkullDirectory(bool usePersonalDir = true)
         {
             DirectoryInfo rootDirectory = null;
-            string pathToPersonalDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string pathToDir;
+            if (usePersonalDir)
+            {
+                pathToDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            }
+            else
+            {
+                pathToDir = "/media";
+            }
             try
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    rootDirectory = Directory.CreateDirectory(@pathToPersonalDir + @"/skullOS",
-                        unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+                    rootDirectory = Directory.CreateDirectory(pathToDir + @"/skullOS",
+                        unixCreateMode: UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
                 }
             }
             catch (Exception e)
