@@ -31,6 +31,7 @@ namespace skullOS.HardwareServices
                 .WithTimeout(1)
                 .WithVflip()
                 .WithHflip()
+                .WithPictureOptions(quality: 100)
                 .WithResolution(2592, 1944);
             var args = builder.GetArguments();
 
@@ -39,8 +40,9 @@ namespace skullOS.HardwareServices
             Console.WriteLine(proc.GetFullCommandLine(args));
             Console.WriteLine();
 
-            //string? filename = $"{fileLocation} {DateTime.Now:yyyyMMddHHmmss}.jpg";
-            string? filename = $"{DateTime.Now:yyyyMMddHHmmss}.jpg"; //Fakename
+            var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string? filename = fileLocation + timestamp + ".jpg";
+            //string? filename = $"{DateTime.Now:yyyyMMddHHmmss}.jpg"; //Fakename
             try
             {
                 using var file = File.OpenWrite(filename);

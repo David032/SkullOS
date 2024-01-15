@@ -42,7 +42,7 @@ namespace skullOS
         {
             if (shouldCreateDirectory)
             {
-                FileManager.CreateSkullDirectory();
+                FileManager.CreateSkullDirectory(false);
             }
 
             SkullLogger logger = new();
