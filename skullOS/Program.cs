@@ -95,7 +95,7 @@ namespace skullOS
             deviceManager.AttachModules(modules);
 
             //Setup input options
-            inputManager.SetupSelector(deviceManager.GetModules());
+            inputManager.SetupSelector(deviceManager.GetModules(), controller);
         }
     }
 }

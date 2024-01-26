@@ -1,6 +1,7 @@
 ﻿using Iot.Device.Button;
 using skullOS.Core;
 using skullOS.Modules;
+using System.Device.Gpio;
 using System.Text.RegularExpressions;
 
 namespace skullOS
@@ -18,7 +19,7 @@ namespace skullOS
             ActionButton = new GpioButton(actionButtonPin);
         }
 
-        public void SetupSelector(List<Module> Modules)
+        public void SetupSelector(List<Module> Modules, GpioController controller)
         {
             var inputs = SettingsLoader.LoadConfig(@"Data/InputSettings.txt");
             if (inputs.Count == 0)
@@ -50,6 +51,9 @@ namespace skullOS
             else
             {
                 //If there's more than one, parse each one in the following pattern: module(args)=pin
+                //Assume that they are a rotary switch - so there can only be one active at any time
+                //When one of them completes, set that one as the active mode?
+                //Will require clearing and reseting the OnAction each time
             }
         }
 
