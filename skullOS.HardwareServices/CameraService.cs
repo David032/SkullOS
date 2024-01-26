@@ -36,15 +36,15 @@ namespace skullOS.HardwareServices
 
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string? filename = fileLocation + timestamp + ".jpg";
-            await Console.Out.WriteLineAsync("Picture file is at: " + filename);
 
             try
             {
                 using var file = File.OpenWrite(filename);
                 await proc.ExecuteAsync(args, file);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                await Console.Out.WriteLineAsync(e.Message);
                 return "Cam errored!";
             }
 
@@ -55,7 +55,7 @@ namespace skullOS.HardwareServices
         public async Task<string> CaptureVideo(string fileLocation, int duration = 30)
         {
             var builder = new CommandOptionsBuilder()
-                .WithContinuousStreaming(0)
+                .WithContinuousStreaming(duration * 1000)
                 .WithVflip()
                 .WithHflip()
                 .WithResolution(xResolution, yResolution);
@@ -66,19 +66,16 @@ namespace skullOS.HardwareServices
 
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             var filename = fileLocation + timestamp + ".h264";
-            await Console.Out.WriteLineAsync("Video file is at: " + filename);
-            using var file = File.OpenWrite(filename);
 
-            var task = await proc.ContinuousRunAsync(args, file);
-            await Task.Delay(duration * 1000);
-            proc.Dispose();
-            // The following try/catch is needed to trash the OperationCanceledException triggered by the Dispose
             try
             {
-                await task;
+                using var file = File.OpenWrite(filename);
+                await proc.ExecuteAsync(args, file);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                await Console.Out.WriteLineAsync(e.Message);
+                return "Cam errored!";
             }
 
             return filename;
