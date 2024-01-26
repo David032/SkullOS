@@ -63,20 +63,23 @@ namespace skullOS.Modules
                 LedService.BlinkLight("CameraLight");
             }
             BuzzerService.Buzzer.PlayTone(1500, 500);
-            await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
-            LogMessage($"({DateTime.Now}) Picture taken!");
+            var result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
+            LogMessage(result);
 
-            //CameraService.Camera.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 
-        public void RecordShortVideo()
+        public async void RecordShortVideo()
         {
-            string audioLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.mp3";
-            string videoLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}";
-            CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
-            if (useMic)
+            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
             {
-                MicrophoneService.Microphone.Record(30, audioLocation);
+                LedService.TurnOn("CameraLight");
+            }
+            BuzzerService.Buzzer.PlayTone(1500, 500);
+            var result = await CameraService.CaptureVideo($"{FileManager.GetSkullDirectory()}/Captures/");
+            LogMessage(result);
+            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+            {
+                LedService.TurnOff("CameraLight");
             }
         }
 
