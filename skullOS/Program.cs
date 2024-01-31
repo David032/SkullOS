@@ -7,6 +7,7 @@ namespace skullOS
 {
     public class Program
     {
+        static bool usePersonalDir = false;
         public static async Task Main(string[] args)
         {
             if (args.Length == 0)
@@ -15,6 +16,10 @@ namespace skullOS
                 Environment.Exit(-1);
             }
             string input = args[0].ToLower();
+            if (args.Length == 2)
+            {
+                bool.TryParse(args[1], out usePersonalDir);
+            }
             switch (input)
             {
                 case "run":
@@ -42,7 +47,7 @@ namespace skullOS
         {
             if (shouldCreateDirectory)
             {
-                FileManager.CreateSkullDirectory(false);
+                FileManager.CreateSkullDirectory(usePersonalDir);
             }
 
             SkullLogger logger = new();
