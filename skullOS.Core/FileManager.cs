@@ -23,7 +23,9 @@ namespace skullOS.Core
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     rootDirectory = Directory.CreateDirectory(pathToDir + @"/skullOS",
-                        unixCreateMode: UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                                    unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
                 }
             }
             catch (Exception e)
@@ -40,9 +42,12 @@ namespace skullOS.Core
 
         public static void CreateSubDirectory(string directoryName)
         {
-            if (rootDirectoryPath != string.Empty)
+            if (rootDirectoryPath != string.Empty && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Directory.CreateDirectory(@rootDirectoryPath + "/" + directoryName);
+                Directory.CreateDirectory(rootDirectoryPath + @"/" + directoryName,
+                    unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
             }
         }
     }
