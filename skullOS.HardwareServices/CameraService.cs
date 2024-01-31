@@ -25,14 +25,14 @@ namespace skullOS.HardwareServices
             _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
         }
 
-        public async Task<string> TakePictureAsync(string fileLocation)
+        public async Task<string> TakePictureAsync(string fileLocation, int x = 2592, int y = 1944)
         {
             var builder = new CommandOptionsBuilder()
                 .WithTimeout(1)
                 .WithVflip()
                 .WithHflip()
                 .WithPictureOptions(quality: 100)
-                .WithResolution(2592, 1944);
+                .WithResolution(x, y);
             var args = builder.GetArguments();
 
             using var proc = new ProcessRunner(_processSettings);
