@@ -19,6 +19,9 @@
     <None Update="Data\CameraSettings.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Data\PropSettings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\computer-startup-music.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
