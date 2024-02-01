@@ -7,6 +7,7 @@ namespace skullOS.Modules
     public class Prop : Module, IPropModule
     {
         public ISpeakerService SpeakerService { get; set; }
+        public ILedService LedService { get; set; }
 
         static Timer PlayIdleSound;
         double interval = 30000;
@@ -18,7 +19,6 @@ namespace skullOS.Modules
         {
             SpeakerService = new SpeakerService();
             SpeakerService.PlayAudio(@"Resources/computer-startup-music.mp3"); //This one won't await :(
-
             sounds = Directory.GetFiles(@"Resources/Haro/Idles");
             numberOfIdles = sounds.Length;
 
@@ -26,6 +26,19 @@ namespace skullOS.Modules
             PlayIdleSound.AutoReset = true;
             PlayIdleSound.Elapsed += PlayIdleSound_Elapsed;
             PlayIdleSound.Start();
+
+            //Left and right eye, these are next to each other so it should be easy to tell
+            Dictionary<string, int> pins = new Dictionary<string, int>
+                    {
+                        { "LeftEye", 22 },
+                        {"RightEye", 23 }
+                    };
+            LedService = new LedService(pins);
+            foreach (var item in LedService.GetLeds())
+            {
+                int pin = item.Value;
+                LedService.TurnOn(pin);
+            }
         }
 
         private void PlayIdleSound_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
