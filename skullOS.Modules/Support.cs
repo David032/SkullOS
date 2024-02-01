@@ -37,7 +37,7 @@ namespace skullOS.Modules
 
         private void LowBatteryAlert_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            speakerService.PlayAudio(@"Resources\710280__dan2008__no-battery.mp3");
+            speakerService.PlayAudio(@"Resources\noBattery.mp3");
         }
 
         public override void OnAction(object? sender, EventArgs e)

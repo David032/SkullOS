@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;PiBuild</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,6 @@
 
   <ItemGroup>
     <PackageReference Include="DeepSpeech" Version="0.9.3" />
-    <PackageReference Include="DeepSpeech-GPU" Version="0.9.3" />
     <PackageReference Include="DeepSpeech-TFLite" Version="0.9.3" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
@@ -29,10 +29,10 @@
     <None Update="Data\PropSettings.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\51360__thecheeseman__camera_snap1.mp3">
+    <None Update="Resources\cameraSnap.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\710280__dan2008__no-battery.mp3">
+    <None Update="Resources\noBattery.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\computer-startup-music.mp3">

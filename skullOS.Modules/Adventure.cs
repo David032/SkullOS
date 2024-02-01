@@ -25,6 +25,7 @@ namespace skullOS.Modules
             takePicture.AutoReset = true;
             takePicture.Elapsed += TakePicture_Elapsed;
             takePicture.Start();
+
         }
 
         private void TakePicture_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)

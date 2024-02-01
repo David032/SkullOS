@@ -14,11 +14,12 @@ namespace skullOS.Modules
         IMicrophoneService MicrophoneService { get; set; }
         ISpeakerService SpeakerService { get; set; }
 
-        string CameraSound = @"Resources/51360__thecheeseman__camera_snap1.mp3";
+        string CameraSound = @"Resources/cameraSnap.mp3";
 
         static Timer CommandCheck;
         double interval = 10000;
 
+        string tempFile;
         public AiCamera()
         {
             CameraService = new CameraService();
@@ -32,26 +33,54 @@ namespace skullOS.Modules
             CommandCheck.AutoReset = true;
             CommandCheck.Elapsed += CommandCheck_Elapsed;
             CommandCheck.Start();
+
+            tempFile = FileManager.GetSkullDirectory() + "/Temp/Audio.wav";
+            File.Create(tempFile);
         }
 
         private void CommandCheck_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            string file = FileManager.GetSkullDirectory() + "/Temp/Audio.mp3";
-            if (File.Exists(file))
+#if DEBUG
+            logger.LogMessage("Checking for audio prompt...");
+#endif
+            if (File.Exists(tempFile))
             {
                 using IDeepSpeech sttClient = new DeepSpeechClient.DeepSpeech("output_graph.pbmm");
-                var buffer = new WaveBuffer(File.ReadAllBytes(file));
-                var info = new Mp3FileReader(file);
+                var buffer = new WaveBuffer(File.ReadAllBytes(tempFile));
+                var info = new WaveFileReader(tempFile);
+                Console.WriteLine("Length: " + info.Length + ". Total time: " + info.TotalTime);
 
                 var speechResult = sttClient.SpeechToText(buffer.ShortBuffer, Convert.ToUInt32(buffer.MaxSize / 2)).ToLower();
                 var wordsSpoken = speechResult.Split();
 
+
                 if (wordsSpoken.Contains("haro") && wordsSpoken.Contains("take") && wordsSpoken.Contains("picture"))
                 {
+                    logger.LogMessage("Heard the command phase!");
                     TakePicture();
                 }
+                else if (wordsSpoken.Contains("take") && wordsSpoken.Contains("picture"))
+                {
+                    logger.LogMessage("Might've heard the command phase?");
+                    TakePicture();
+                }
+                else if (wordsSpoken.Contains("haro"))
+                {
+                    logger.LogMessage("Heard my name?");
+                    TakePicture();
+                }
+                else
+                {
+#if DEBUG
+                    Console.WriteLine(speechResult);
+#endif
+                }
             }
-            MicrophoneService.GetMicrophone().Record(10, file);
+            else
+            {
+                Console.WriteLine("No audio file?!");
+            }
+            MicrophoneService.GetMicrophone().Record(10, tempFile);
         }
 
         public override void OnAction(object? sender, EventArgs e)

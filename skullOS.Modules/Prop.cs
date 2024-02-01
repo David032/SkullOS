@@ -67,6 +67,7 @@ namespace skullOS.Modules
         {
             var random = new Random();
             int selection = random.Next(0, numberOfIdles + 1);
+            logger.LogMessage("Playing " + sounds[selection] + " idle sound");
             SpeakerService.PlayAudio(sounds[selection]);
             if (propSettings.ContainsKey("Servos"))
             {
@@ -85,12 +86,14 @@ namespace skullOS.Modules
         {
             if (useLeft)
             {
+                logger.LogMessage("Flapping left ear");
                 leftFlap.WritePulseWidth(1500);
                 await Task.Delay(1500);
                 leftFlap.WritePulseWidth(0);
             }
             else
             {
+                logger.LogMessage("Flapping right ear");
                 rightFlap.WritePulseWidth(1500);
                 await Task.Delay(1500);
                 rightFlap.WritePulseWidth(0);
