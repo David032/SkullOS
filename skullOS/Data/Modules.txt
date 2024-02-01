@@ -1,3 +1,4 @@
 Prop=True
 Adventure=True
 Support=True
+AiCamera=True
