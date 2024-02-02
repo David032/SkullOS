@@ -36,9 +36,6 @@ namespace skullOS.HardwareServices
             var args = builder.GetArguments();
 
             using var proc = new ProcessRunner(_processSettings);
-            Console.WriteLine("Using the following command line:");
-            Console.WriteLine(proc.GetFullCommandLine(args));
-            Console.WriteLine();
 
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string? filename = fileLocation + timestamp + ".jpg";

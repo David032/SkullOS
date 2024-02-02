@@ -1,9 +1,8 @@
-﻿using DeepSpeechClient.Interfaces;
-using NAudio.Wave;
-using skullOS.Core;
+﻿using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.HardwareServices.Interfaces;
 using skullOS.Modules.Interfaces;
+using System.Diagnostics;
 using Timer = System.Timers.Timer;
 
 namespace skullOS.Modules
@@ -17,7 +16,7 @@ namespace skullOS.Modules
         string CameraSound = @"Resources/cameraSnap.mp3";
 
         static Timer CommandCheck;
-        double interval = 10000;
+        double interval = 10500;
 
         string tempFile;
         public AiCamera()
@@ -35,7 +34,6 @@ namespace skullOS.Modules
             CommandCheck.Start();
 
             tempFile = FileManager.GetSkullDirectory() + "/Temp/Audio.wav";
-            File.Create(tempFile);
         }
 
         private void CommandCheck_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -43,44 +41,7 @@ namespace skullOS.Modules
 #if DEBUG
             logger.LogMessage("Checking for audio prompt...");
 #endif
-            if (File.Exists(tempFile))
-            {
-                using IDeepSpeech sttClient = new DeepSpeechClient.DeepSpeech("output_graph.pbmm");
-                var buffer = new WaveBuffer(File.ReadAllBytes(tempFile));
-                var info = new WaveFileReader(tempFile);
-                Console.WriteLine("Length: " + info.Length + ". Total time: " + info.TotalTime);
-
-                var speechResult = sttClient.SpeechToText(buffer.ShortBuffer, Convert.ToUInt32(buffer.MaxSize / 2)).ToLower();
-                var wordsSpoken = speechResult.Split();
-
-
-                if (wordsSpoken.Contains("haro") && wordsSpoken.Contains("take") && wordsSpoken.Contains("picture"))
-                {
-                    logger.LogMessage("Heard the command phase!");
-                    TakePicture();
-                }
-                else if (wordsSpoken.Contains("take") && wordsSpoken.Contains("picture"))
-                {
-                    logger.LogMessage("Might've heard the command phase?");
-                    TakePicture();
-                }
-                else if (wordsSpoken.Contains("haro"))
-                {
-                    logger.LogMessage("Heard my name?");
-                    TakePicture();
-                }
-                else
-                {
-#if DEBUG
-                    Console.WriteLine(speechResult);
-#endif
-                }
-            }
-            else
-            {
-                Console.WriteLine("No audio file?!");
-            }
-            MicrophoneService.GetMicrophone().Record(10, tempFile);
+            RecordAudio();
         }
 
         public override void OnAction(object? sender, EventArgs e)
@@ -108,6 +69,18 @@ namespace skullOS.Modules
             CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
             LogMessage($"({DateTime.Now}) Picture taken!");
             SpeakerService.PlayAudio(CameraSound);
+        }
+
+        public void RecordAudio()
+        {
+            using (Process audioRecording = new Process())
+            {
+                string args = " -D plughw:1,0 --duration=10 " + tempFile;
+
+                audioRecording.StartInfo.FileName = "arecord";
+                audioRecording.StartInfo.Arguments = args;
+                audioRecording.Start();
+            }
         }
     }
 }

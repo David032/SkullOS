@@ -27,9 +27,6 @@ namespace skullOS.HardwareServices
             soundPlayback.StartInfo.Arguments = args;
             soundPlayback.EnableRaisingEvents = true;
             soundPlayback.Exited += SoundPlayback_Exited;
-#if DEBUG
-            await Console.Out.WriteLineAsync(soundPlayback.StartInfo.FileName + soundPlayback.StartInfo.Arguments);
-#endif
             soundPlayback.Start();
             await soundPlayback.WaitForExitAsync();
         }

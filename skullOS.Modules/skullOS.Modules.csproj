@@ -14,12 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DeepSpeech" Version="0.9.3" />
-    <PackageReference Include="DeepSpeech-TFLite" Version="0.9.3" />
-    <PackageReference Include="NAudio" Version="2.2.1" />
+    <Folder Include="AI\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +42,54 @@
     <None Update="Resources\Haro\Idles\HaroYabai-101soundboards.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libgcc_s_seh-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libstdc++-6.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libvosk.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libwinpthread-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libgcc_s_seh-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libstdc++-6.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libvosk.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libwinpthread-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libwinpthread-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libgcc_s_seh-1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libstdc++-6.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\David\.nuget\packages\vosk\0.3.38\build\lib\win-x64\libvosk.dll" />
   </ItemGroup>
   
 </Project>
