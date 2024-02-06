@@ -9,8 +9,6 @@ namespace skullOS.HardwareServices
     /// </summary>
     public class SpeakerService : ISpeakerService
     {
-        private TaskCompletionSource<bool> eventHandled;
-
         public SpeakerService()
         {
 
@@ -18,7 +16,6 @@ namespace skullOS.HardwareServices
 
         public async Task PlayAudio(string filepath)
         {
-            eventHandled = new TaskCompletionSource<bool>();
             using Process soundPlayback = new Process();
 
             string args = " --play-and-exit " + filepath;
@@ -26,17 +23,11 @@ namespace skullOS.HardwareServices
             soundPlayback.StartInfo.FileName = "cvlc";
             soundPlayback.StartInfo.Arguments = args;
             soundPlayback.EnableRaisingEvents = true;
-            soundPlayback.Exited += SoundPlayback_Exited;
 #if DEBUG
             await Console.Out.WriteLineAsync(soundPlayback.StartInfo.FileName + soundPlayback.StartInfo.Arguments);
 #endif
             soundPlayback.Start();
             await soundPlayback.WaitForExitAsync();
-        }
-
-        private void SoundPlayback_Exited(object? sender, EventArgs e)
-        {
-            eventHandled.TrySetResult(true);
         }
     }
 }
