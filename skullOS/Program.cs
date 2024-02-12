@@ -47,6 +47,7 @@ namespace skullOS
         {
             if (shouldCreateDirectory)
             {
+                Console.WriteLine("Use personal dir? " + usePersonalDir);
                 FileManager.CreateSkullDirectory(usePersonalDir);
             }
 

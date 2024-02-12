@@ -12,7 +12,9 @@ namespace skullOS.Core
             string pathToDir;
             if (usePersonalDir)
             {
-                pathToDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                //pathToDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                pathToDir = Environment.GetEnvironmentVariable("HOME");
+                Console.WriteLine("Path to personal dir is " + pathToDir);
             }
             else
             {
@@ -37,6 +39,7 @@ namespace skullOS.Core
                 throw new Exception("Root directory not defined!");
             }
             rootDirectoryPath = rootDirectory.FullName;
+            Console.WriteLine("Root directory is: " + rootDirectoryPath);
         }
 
         public static string GetSkullDirectory()
