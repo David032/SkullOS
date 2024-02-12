@@ -8,7 +8,7 @@ namespace skullOS.Core
 
         public static void CreateSkullDirectory(bool usePersonalDir = true)
         {
-            DirectoryInfo rootDirectory = null;
+            DirectoryInfo? rootDirectory = null;
             string pathToDir;
             if (usePersonalDir)
             {
@@ -31,6 +31,10 @@ namespace skullOS.Core
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+            if (rootDirectory == null)
+            {
+                throw new Exception("Root directory not defined!");
             }
             rootDirectoryPath = rootDirectory.FullName;
         }

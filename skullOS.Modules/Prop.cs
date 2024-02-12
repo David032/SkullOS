@@ -12,7 +12,7 @@ namespace skullOS.Modules
         public ISpeakerService SpeakerService { get; set; }
         public ILedService LedService { get; set; }
 
-        static Timer PlayIdleSound;
+        static Timer? PlayIdleSound;
         double interval = 30000;
         string[] sounds;
         int numberOfIdles;
@@ -21,7 +21,9 @@ namespace skullOS.Modules
         ServoMotor rightFlap;
 
         Dictionary<string, string> propSettings;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Prop()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
 
@@ -54,10 +56,10 @@ namespace skullOS.Modules
             }
             if (propSettings.ContainsKey("Servos"))
             {
-                var leftPWM = new SoftwarePwmChannel(5, 50);
+                SoftwarePwmChannel leftPWM = new SoftwarePwmChannel(5, 50);
                 leftFlap = new ServoMotor(leftPWM);
                 leftFlap.Start();
-                var rightPWM = new SoftwarePwmChannel(6, 50);
+                SoftwarePwmChannel rightPWM = new SoftwarePwmChannel(6, 50);
                 rightFlap = new ServoMotor(rightPWM);
                 rightFlap.Start();
             }
@@ -65,7 +67,7 @@ namespace skullOS.Modules
 
         private void PlayIdleSound_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            var random = new Random();
+            Random random = new Random();
             int selection = random.Next(0, numberOfIdles + 1);
             SpeakerService.PlayAudio(sounds[selection]);
             if (propSettings.ContainsKey("Servos"))

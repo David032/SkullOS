@@ -11,7 +11,7 @@ namespace skullOS.Modules
     {
         GpioController controller;
         ISpeakerService speakerService;
-        static Timer LowBatteryAlert;
+        static Timer? LowBatteryAlert;
         double interval = 60000;
         int pin = 4;
 
@@ -32,7 +32,7 @@ namespace skullOS.Modules
         void OnLowBattery(object sender, PinValueChangedEventArgs args)
         {
             //Activate warning led - needs to be very dim to prevent it bleeding out of the casing
-            LowBatteryAlert.Start();
+            LowBatteryAlert?.Start();
         }
 
         private void LowBatteryAlert_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)

@@ -90,11 +90,19 @@ namespace skullOS
                 if (bool.Parse(item.Value))
                 {
                     logger.LogMessage("Attempting to load " + item.Key);
-                    Type moduleClass = ModulesLibrary.DefinedTypes.Where(x => x.Name == item.Key).FirstOrDefault();
-                    object? moduleObj = Activator.CreateInstance(moduleClass);
-                    Module module = moduleObj as Module;
-                    module.AttachLogger(logger);
-                    modules.Add(module);
+                    Type moduleClass = ModulesLibrary.DefinedTypes.FirstOrDefault(x => x.Name == item.Key);
+                    if (moduleClass != null)
+                    {
+                        object? moduleObj = Activator.CreateInstance(moduleClass);
+                        Module? module = moduleObj as Module ?? throw new Exception("Failed to load module: " + item.Key);
+                        module.AttachLogger(logger);
+                        modules.Add(module);
+                    }
+                    else
+                    {
+                        logger.LogMessage("Something went wrong!");
+                    }
+
                 }
             }
             deviceManager.AttachModules(modules);

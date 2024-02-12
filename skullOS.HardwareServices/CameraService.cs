@@ -12,7 +12,7 @@ namespace skullOS.HardwareServices
         private readonly ProcessSettings _processSettings;
 
 
-        public CameraService(VideoConnectionSettings cameraSettings = null)
+        public CameraService(VideoConnectionSettings? cameraSettings = null)
         {
             cameraSettings ??= new(busId: 0, captureSize: (2592, 1944), pixelFormat: VideoPixelFormat.JPEG);
             Camera = VideoDevice.Create(cameraSettings);

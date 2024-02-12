@@ -29,14 +29,14 @@ namespace skullOS
             {
                 //One input means no selector
                 string moduleToLoad;
-                string[] args = new string[1];
+                string[]? args = new string[1];
                 var match = Regex.Match(inputs.Keys.First(), @"[(]\w*[)]");
                 if (match.Success)
                 {
                     moduleToLoad = inputs.Keys.First().Split('(')[0];
                     char[] charsToRemove = { '(', ')' };
                     args.SetValue(match.Groups[0].Value.Trim(charsToRemove), 0);
-                    logger.LogMessage("Set argument to " + match.Groups[0].Value.Trim(charsToRemove));
+                    LogMessage("Set argument to " + match.Groups[0].Value.Trim(charsToRemove));
                 }
                 else
                 {
@@ -45,6 +45,10 @@ namespace skullOS
                 }
 
                 var module = Modules.Select(x => x).Where(x => x.ToString() == moduleToLoad).FirstOrDefault();
+                if (module == null)
+                {
+                    throw new Exception("Failed to load module for input binding!");
+                }
                 SetActiveModule(module, args);
             }
             else
@@ -53,9 +57,14 @@ namespace skullOS
             }
         }
 
-        public void SetActiveModule(Module moduleToLoad, string[] args = null)
+        public void SetActiveModule(Module moduleToLoad, string[]? args = null)
         {
-            logger.LogMessage("Setting " + moduleToLoad.ToString() + " as the active module");
+            if (args == null)
+            {
+                LogMessage("No modules provided, so nothing to set as active");
+                return;
+            }
+            LogMessage("Setting " + moduleToLoad.ToString() + " as the active module");
             moduleToLoad.OnEnable(args);
             ActionButton.Press += moduleToLoad.OnAction;
             activeModule = moduleToLoad;
@@ -64,6 +73,15 @@ namespace skullOS
         public void attachLogger(SkullLogger skullLogger)
         {
             logger = skullLogger;
+        }
+
+        public void LogMessage(string message)
+        {
+            if (logger == null)
+            {
+                throw new Exception("Logger not attached to input manager!");
+            }
+            logger.LogMessage(message);
         }
     }
 }

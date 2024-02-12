@@ -9,7 +9,7 @@ namespace skullOS.Modules
     public class Adventure : Module, IAdventure
     {
         string directory = string.Empty;
-        static Timer takePicture;
+        static Timer? takePicture;
         double interval = 30000;
         ICameraService cameraService;
 
