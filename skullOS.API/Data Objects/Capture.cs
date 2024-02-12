@@ -3,10 +3,10 @@
     public class Capture
     {
         private string filename;
-        private string date;
+        private string? date;
         private string time;
 
-        public Capture(string Name, string time, string date = null)
+        public Capture(string Name, string time, string? date = null)
         {
             filename = Name;
             this.date = date;
@@ -27,7 +27,17 @@
 
         public string Date
         {
-            get { return date; }
+            get
+            {
+                if (date != null)
+                {
+                    return date;
+                }
+                else
+                {
+                    return "No date";
+                }
+            }
             set { date = value; }
         }
     }

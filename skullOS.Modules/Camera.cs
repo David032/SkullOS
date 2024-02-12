@@ -14,8 +14,8 @@ namespace skullOS.Modules
     public class Camera : Module, ICameraModule
     {
         public CameraService CameraService;
-        public MicrophoneService MicrophoneService;
-        public LedService LedService;
+        public MicrophoneService? MicrophoneService = null;
+        public LedService? LedService = null;
         public CameraMode CameraMode = CameraMode.Image;
         public BuzzerService BuzzerService;
 
@@ -73,8 +73,8 @@ namespace skullOS.Modules
         {
             string audioLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.mp3";
             string videoLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}";
-            CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
-            if (useMic)
+            //CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
+            if (useMic && MicrophoneService != null)
             {
                 MicrophoneService.Microphone.Record(30, audioLocation);
             }

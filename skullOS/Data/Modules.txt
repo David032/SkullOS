@@ -1,6 +1,2 @@
-﻿Camera=True
-Downlink=True
-Uplink=True
-Prop=True
-QrCodeReader=True
-Buzzer=True
+Adventure=True
+Camera=True

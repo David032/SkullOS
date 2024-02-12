@@ -6,7 +6,7 @@ namespace skullOS
 {
     public class DeviceManager
     {
-        Task apiStatus;
+        //Task apiStatus;
         List<Module> Modules;
         GpioController Controller;
         int powerLed = 23;
@@ -14,6 +14,7 @@ namespace skullOS
 
         public DeviceManager(GpioController gpio)
         {
+            Modules = new List<Module>();
             Controller = gpio;
 
             if (!Controller.IsPinOpen(powerLed))
@@ -26,10 +27,10 @@ namespace skullOS
             var connectionCheck = new Timer(CheckForNetwork, autoEvent, 0, 30000);
         }
 
-        public void AttachApi(Task apiTask)
-        {
-            apiStatus = apiTask;
-        }
+        //public void AttachApi(Task apiTask)
+        //{
+        //    apiStatus = apiTask;
+        //}
 
         public void AttachModules(List<Module> modules)
         {
