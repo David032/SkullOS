@@ -2,6 +2,7 @@
 using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.HardwareServices.Interfaces;
+using skullOS.Modules.Exceptions;
 using System.Device.Pwm.Drivers;
 using Timer = System.Timers.Timer;
 
@@ -102,12 +103,12 @@ namespace skullOS.Modules
 
         public override void OnAction(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new OnActionException("Prop doesn't support OnAction");
         }
 
         public override void OnEnable(string[] args)
         {
-            throw new NotImplementedException();
+            throw new OnEnableException("Prop doesn't support OnEnable");
         }
         public override string ToString()
         {
