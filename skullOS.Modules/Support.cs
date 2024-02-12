@@ -1,5 +1,6 @@
 ﻿using skullOS.HardwareServices;
 using skullOS.HardwareServices.Interfaces;
+using skullOS.Modules.Exceptions;
 using skullOS.Modules.Interfaces;
 using System.Device.Gpio;
 using Timer = System.Timers.Timer;
@@ -42,12 +43,12 @@ namespace skullOS.Modules
 
         public override void OnAction(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new OnActionException("Support doesn't support OnAction");
         }
 
         public override void OnEnable(string[] args)
         {
-            throw new NotImplementedException();
+            throw new OnEnableException("Support doesn't support OnEnable");
         }
 
         public override string ToString()
