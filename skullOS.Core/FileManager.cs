@@ -6,40 +6,55 @@ namespace skullOS.Core
     {
         private static string rootDirectoryPath = string.Empty;
 
-        public static void CreateSkullDirectory(bool usePersonalDir = true)
+        public static void CreateSkullDirectory(bool usePersonalDir = true, bool isTest = false)
         {
-            DirectoryInfo? rootDirectory = null;
-            string pathToDir;
-            if (usePersonalDir)
+            if (!isTest)
             {
-                //pathToDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                pathToDir = Environment.GetEnvironmentVariable("HOME");
-                Console.WriteLine("Path to personal dir is " + pathToDir);
+                DirectoryInfo? rootDirectory = null;
+                string pathToDir;
+                if (usePersonalDir)
+                {
+                    //pathToDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    pathToDir = Environment.GetEnvironmentVariable("HOME");
+                    Console.WriteLine("Path to personal dir is " + pathToDir);
+                }
+                else
+                {
+                    pathToDir = "/media";
+                }
+                try
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        rootDirectory = Directory.CreateDirectory(pathToDir + @"/skullOS",
+                                        unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                                        UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                                        UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                if (rootDirectory == null)
+                {
+                    throw new Exception("Root directory not defined!");
+                }
+                rootDirectoryPath = rootDirectory.FullName;
             }
             else
             {
-                pathToDir = "/media";
-            }
-            try
-            {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    rootDirectory = Directory.CreateDirectory(pathToDir + @"/skullOS",
-                                    unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
-                                                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
-                                                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                    DirectoryInfo rootDirectory = Directory.CreateDirectory("/skullOS-TestData", unixCreateMode:
+                                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                    rootDirectoryPath = rootDirectory.FullName;
                 }
+
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            if (rootDirectory == null)
-            {
-                throw new Exception("Root directory not defined!");
-            }
-            rootDirectoryPath = rootDirectory.FullName;
-            Console.WriteLine("Root directory is: " + rootDirectoryPath);
+
         }
 
         public static string GetSkullDirectory()
@@ -56,6 +71,11 @@ namespace skullOS.Core
                                     UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
                                     UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
             }
+        }
+
+        public static void DeleteDirectory()
+        {
+            Directory.Delete(rootDirectoryPath, true);
         }
     }
 }

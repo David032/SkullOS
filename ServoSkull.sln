@@ -36,6 +36,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.HardwareServices", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServoSkullDemo", "MiscFiles\ServoSkullDemo\ServoSkullDemo.csproj", "{0B0F89D7-32B6-4E20-B676-44F70E7B5352}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{356018AA-0F2A-48D2-B263-62D52906053F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56} = {DE800E5A-E68B-4BCA-AC99-4BC9DB44FD56}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{464B162B-62FC-49CC-A6AB-72DBE959DD8C} = {464B162B-62FC-49CC-A6AB-72DBE959DD8C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,12 +102,30 @@ Global
 		{0B0F89D7-32B6-4E20-B676-44F70E7B5352}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B0F89D7-32B6-4E20-B676-44F70E7B5352}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{0B0F89D7-32B6-4E20-B676-44F70E7B5352}.Release|ARM64.Build.0 = Release|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{356018AA-0F2A-48D2-B263-62D52906053F}.Release|ARM64.Build.0 = Release|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6}.Release|ARM64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0B0F89D7-32B6-4E20-B676-44F70E7B5352} = {EE38A10C-F0BB-40B5-B1E6-8CB16C6E452C}
+		{356018AA-0F2A-48D2-B263-62D52906053F} = {B50B951E-DF9B-49DD-9CAC-ED8B01C6B1E7}
+		{B5CE836D-7EEE-4D59-81AF-A29399CF6BC6} = {B50B951E-DF9B-49DD-9CAC-ED8B01C6B1E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FA7BE016-5699-47F3-A654-08A907CE1F11}
