@@ -1,4 +1,5 @@
 ﻿using skullOS.HardwareServices;
+using skullOS.Modules.Exceptions;
 using skullOS.Modules.Interfaces;
 using static skullOS.Modules.BuzzerLibrary;
 using static skullOS.Modules.BuzzerStructures;
@@ -34,11 +35,11 @@ namespace skullOS.Modules
 
         public override void OnAction(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new OnActionException("Buzzer does not support OnAction");
         }
         public override void OnEnable(string[] args)
         {
-            throw new NotImplementedException();
+            throw new OnEnableException("Buzzer does not support OnEnable");
         }
         public override string ToString()
         {

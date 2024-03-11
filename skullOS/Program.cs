@@ -7,6 +7,7 @@ namespace skullOS
 {
     public class Program
     {
+        static bool usePersonalDir = false;
         public static async Task Main(string[] args)
         {
             if (args.Length == 0)
@@ -15,6 +16,10 @@ namespace skullOS
                 Environment.Exit(-1);
             }
             string input = args[0].ToLower();
+            if (args.Length == 2)
+            {
+                bool.TryParse(args[1], out usePersonalDir);
+            }
             switch (input)
             {
                 case "run":
@@ -42,7 +47,8 @@ namespace skullOS
         {
             if (shouldCreateDirectory)
             {
-                FileManager.CreateSkullDirectory(false);
+                Console.WriteLine("Use personal dir? " + usePersonalDir);
+                FileManager.CreateSkullDirectory(usePersonalDir);
             }
 
             SkullLogger logger = new();
@@ -85,11 +91,19 @@ namespace skullOS
                 if (bool.Parse(item.Value))
                 {
                     logger.LogMessage("Attempting to load " + item.Key);
-                    Type moduleClass = ModulesLibrary.DefinedTypes.Where(x => x.Name == item.Key).FirstOrDefault();
-                    object? moduleObj = Activator.CreateInstance(moduleClass);
-                    Module module = moduleObj as Module;
-                    module.AttachLogger(logger);
-                    modules.Add(module);
+                    Type moduleClass = ModulesLibrary.DefinedTypes.FirstOrDefault(x => x.Name == item.Key);
+                    if (moduleClass != null)
+                    {
+                        object? moduleObj = Activator.CreateInstance(moduleClass);
+                        Module? module = moduleObj as Module ?? throw new Exception("Failed to load module: " + item.Key);
+                        module.AttachLogger(logger);
+                        modules.Add(module);
+                    }
+                    else
+                    {
+                        logger.LogMessage("Something went wrong!");
+                    }
+
                 }
             }
             deviceManager.AttachModules(modules);

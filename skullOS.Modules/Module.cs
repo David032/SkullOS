@@ -4,7 +4,7 @@ namespace skullOS.Modules
 {
     public abstract class Module
     {
-        protected SkullLogger logger;
+        protected SkullLogger? logger;
         public abstract void OnEnable(string[] args);
         public abstract void OnAction(object? sender, EventArgs e);
         public abstract override string ToString();

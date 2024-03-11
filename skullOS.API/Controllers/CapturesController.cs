@@ -30,7 +30,8 @@ namespace skullOS.API.Controllers
         [HttpGet("MostRecent")]
         public IActionResult GetNewest()
         {
-            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg").OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
+            var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg").OrderByDescending(f => f.LastAccessTime).FirstOrDefault()
+                ?? throw new Exception("Failed to find file!"); ;
             var image = System.IO.File.OpenRead(mostRecentImage.FullName);
             return File(image, "image/jpeg");
         }
@@ -85,7 +86,8 @@ namespace skullOS.API.Controllers
         [HttpGet("Image")]
         public IActionResult GetImage(string fileId)
         {
-            var file = capturesDirectoryInfo.GetFiles().Where(f => f.Name == fileId).FirstOrDefault();
+            var file = capturesDirectoryInfo.GetFiles().Where(f => f.Name == fileId).FirstOrDefault()
+                ?? throw new Exception("Failed to find file!");
             var image = System.IO.File.OpenRead(file.FullName);
             return File(image, "image/jpeg");
         }
@@ -93,7 +95,8 @@ namespace skullOS.API.Controllers
         [HttpGet("Video")]
         public IActionResult GetVideo(string fileId)
         {
-            var file = capturesDirectoryInfo.GetFiles().Where(f => f.Name == fileId).FirstOrDefault();
+            var file = capturesDirectoryInfo.GetFiles().Where(f => f.Name == fileId).FirstOrDefault()
+                ?? throw new Exception("Failed to find file!");
             var image = System.IO.File.OpenRead(file.FullName);
             return File(image, "video/mp4");
         }
@@ -116,7 +119,7 @@ namespace skullOS.API.Controllers
         public void DeleteMostRecent()
         {
             var mostRecentImage = capturesDirectoryInfo.GetFiles().Where(f => f.Extension == ".jpg")
-                .OrderByDescending(f => f.LastAccessTime).FirstOrDefault();
+                .OrderByDescending(f => f.LastAccessTime).FirstOrDefault() ?? throw new Exception("Failed to find file!"); ;
             mostRecentImage.Delete();
         }
     }

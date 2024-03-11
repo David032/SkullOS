@@ -1,4 +1,4 @@
-﻿using skullOS.Core;
+using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.Modules.Interfaces;
 using System.Diagnostics;
@@ -15,8 +15,8 @@ namespace skullOS.Modules
     public class Camera : Module, ICameraModule
     {
         public CameraService CameraService;
-        public MicrophoneService MicrophoneService;
-        public LedService LedService;
+        public MicrophoneService? MicrophoneService = null;
+        public LedService? LedService = null;
         public CameraMode CameraMode = CameraMode.Image;
         public BuzzerService BuzzerService;
 

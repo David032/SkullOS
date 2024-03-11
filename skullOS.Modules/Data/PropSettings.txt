@@ -1,0 +1,3 @@
+Sounds=True
+Lights=True
+Servos=True

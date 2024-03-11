@@ -8,11 +8,13 @@ namespace skullOS.Core
 
         public static void CreateSkullDirectory(bool usePersonalDir = true)
         {
-            DirectoryInfo rootDirectory = null;
+            DirectoryInfo? rootDirectory = null;
             string pathToDir;
             if (usePersonalDir)
             {
-                pathToDir = @Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                //pathToDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                pathToDir = Environment.GetEnvironmentVariable("HOME");
+                Console.WriteLine("Path to personal dir is " + pathToDir);
             }
             else
             {
@@ -23,14 +25,21 @@ namespace skullOS.Core
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     rootDirectory = Directory.CreateDirectory(pathToDir + @"/skullOS",
-                        unixCreateMode: UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                                    unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
+            if (rootDirectory == null)
+            {
+                throw new Exception("Root directory not defined!");
+            }
             rootDirectoryPath = rootDirectory.FullName;
+            Console.WriteLine("Root directory is: " + rootDirectoryPath);
         }
 
         public static string GetSkullDirectory()
@@ -40,9 +49,12 @@ namespace skullOS.Core
 
         public static void CreateSubDirectory(string directoryName)
         {
-            if (rootDirectoryPath != string.Empty)
+            if (rootDirectoryPath != string.Empty && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Directory.CreateDirectory(@rootDirectoryPath + "/" + directoryName);
+                Directory.CreateDirectory(rootDirectoryPath + @"/" + directoryName,
+                    unixCreateMode: UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
             }
         }
     }

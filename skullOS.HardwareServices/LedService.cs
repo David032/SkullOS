@@ -40,5 +40,10 @@ namespace skullOS.HardwareServices
             }
             controller.Write(pin, PinValue.Low);
         }
+
+        public Dictionary<string, int> GetLeds()
+        {
+            return LEDs;
+        }
     }
 }
