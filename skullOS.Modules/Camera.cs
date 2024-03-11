@@ -1,4 +1,4 @@
-﻿using skullOS.Core;
+using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.Modules.Interfaces;
 
@@ -63,10 +63,8 @@ namespace skullOS.Modules
                 LedService.BlinkLight("CameraLight");
             }
             BuzzerService.Buzzer.PlayTone(1500, 500);
-            await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
-            LogMessage($"({DateTime.Now}) Picture taken!");
-
-            //CameraService.Camera.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
+            var result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
+            LogMessage(result);
         }
 
         public void RecordShortVideo()

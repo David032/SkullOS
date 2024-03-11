@@ -8,14 +8,18 @@ namespace skullOS
     internal class InputManager
     {
         GpioButton ActionButton;
+        GpioButton ToggleButton;
         int actionButtonPin = 25;
-        private List<GpioButton>? Buttons;
+        int toggleButtonPin = 26;
         private Module? activeModule;
+        List<(int, Module, string)> inputModules = [];
+        int index = 0;
         private SkullLogger? logger;
 
         public InputManager()
         {
             ActionButton = new GpioButton(actionButtonPin);
+            ToggleButton = new GpioButton(toggleButtonPin);
         }
 
         public void SetupSelector(List<Module> Modules)
@@ -44,17 +48,59 @@ namespace skullOS
                     args = null;
                 }
 
-                var module = Modules.Select(x => x).Where(x => x.ToString() == moduleToLoad).FirstOrDefault();
-                if (module == null)
-                {
-                    throw new Exception("Failed to load module for input binding!");
-                }
+                var module = Modules.Select(x => x).Where(x => x.ToString() == moduleToLoad).FirstOrDefault() ?? throw new Exception("Failed to load module for input binding!");
                 SetActiveModule(module, args);
             }
             else
             {
-                //If there's more than one, parse each one in the following pattern: module(args)=pin
+                int count = 0;
+                foreach (var item in inputs)
+                {
+                    string moduleToLoad;
+                    string[]? args = new string[1];
+                    string moduleArguments = string.Empty;
+
+                    var match = Regex.Match(item.Key, @"[(]\w*[)]");
+                    if (match.Success)
+                    {
+                        moduleToLoad = item.Key.Split('(')[0];
+                        LogMessage("Identifed " + moduleToLoad + " as an input source");
+                        char[] charsToRemove = { '(', ')' };
+                        args.SetValue(match.Groups[0].Value.Trim(charsToRemove), 0);
+                        moduleArguments = match.Groups[0].Value.Trim(charsToRemove);
+                        LogMessage("Set argument to " + moduleArguments);
+                    }
+                    else
+                    {
+                        moduleToLoad = item.Key;
+                        args = null;
+                    }
+
+                    var module = Modules.Select(x => x).Where(x => x.ToString() == moduleToLoad).FirstOrDefault() ?? throw new Exception("Failed to load module for input binding!");
+                    inputModules.Add((count, module, moduleArguments));
+                    count++;
+                }
+                Console.WriteLine(count + " options have been registered for input");
+
+
+                SetActiveModule(inputModules.FirstOrDefault().Item2, [inputModules.FirstOrDefault().Item3]);
+                ToggleButton.Press += ToggleButton_Press;
             }
+        }
+
+        private void ToggleButton_Press(object? sender, EventArgs e)
+        {
+            if (index < inputModules.Count)
+            {
+                index++;
+            }
+            else
+            {
+                index = 0;
+            }
+
+            var moduleToSetActive = inputModules[index];
+            SetActiveModule(moduleToSetActive.Item2, [moduleToSetActive.Item3]);
         }
 
         public void SetActiveModule(Module moduleToLoad, string[]? args = null)
