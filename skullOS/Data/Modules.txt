@@ -1,2 +1,2 @@
-Adventure=True
 Camera=True
+Prop=True

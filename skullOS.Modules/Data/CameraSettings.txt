@@ -1,2 +1,3 @@
 UseMic=False
 CameraLight=26
+CameraLightAlt=6

@@ -15,12 +15,9 @@ namespace skullOS.HardwareServices
 
         public CameraService(int x = 2592, int y = 1944)
         {
-            cameraSettings ??= new(busId: 0, captureSize: (2592, 1944), pixelFormat: VideoPixelFormat.JPEG);
-            Camera = VideoDevice.Create(cameraSettings);
-            Camera.Settings.HorizontalFlip = true;
-            Camera.Settings.VerticalFlip = true;
-
             _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
+            xResolution = x;
+            yResolution = y;
         }
 
         public async Task<string> RecordShortVideoAsync(string fileLocation, bool useMic)

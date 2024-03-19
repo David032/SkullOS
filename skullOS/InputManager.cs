@@ -9,8 +9,8 @@ namespace skullOS
     {
         GpioButton ActionButton;
         GpioButton ToggleButton;
-        int actionButtonPin = 25;
-        int toggleButtonPin = 26;
+        int actionButtonPin = 24; //25
+        int toggleButtonPin = 23; //26
         private Module? activeModule;
         List<(int, Module, string)> inputModules = [];
         int index = 0;
@@ -84,15 +84,18 @@ namespace skullOS
 
 
                 SetActiveModule(inputModules.FirstOrDefault().Item2, [inputModules.FirstOrDefault().Item3]);
+                Console.WriteLine("Adding toggle button event");
                 ToggleButton.Press += ToggleButton_Press;
+                Console.WriteLine("toggle button event added!");
             }
         }
 
         private void ToggleButton_Press(object? sender, EventArgs e)
         {
+            Console.WriteLine("Toggle button pressed!");
             if (index < inputModules.Count)
             {
-                index++;
+                index += 1;
             }
             else
             {
@@ -100,6 +103,7 @@ namespace skullOS
             }
 
             var moduleToSetActive = inputModules[index];
+            Console.WriteLine("Attempting to load " + moduleToSetActive.Item2 + " with the args " + moduleToSetActive.Item3);
             SetActiveModule(moduleToSetActive.Item2, [moduleToSetActive.Item3]);
         }
 

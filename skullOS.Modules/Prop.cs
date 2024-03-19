@@ -27,8 +27,10 @@ namespace skullOS.Modules
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
+            propSettings.TryGetValue("Sounds", out string state);
+            bool useSounds = bool.Parse(state);
 
-            if (propSettings.ContainsKey("Sounds"))
+            if (propSettings.ContainsKey("Sounds") && useSounds)
             {
                 SpeakerService = new SpeakerService();
                 SpeakerService.PlayAudio(@"Resources/computer-startup-music.mp3"); //This one won't await :(
@@ -45,8 +47,8 @@ namespace skullOS.Modules
                 //Left and right eye, these are next to each other so it should be easy to tell
                 Dictionary<string, int> pins = new Dictionary<string, int>
                     {
-                        { "LeftEye", 22 },
-                        {"RightEye", 23 }
+                        { "LeftEye", 26 },
+                        {"RightEye", 26 }
                     };
                 LedService = new LedService(pins);
                 foreach (var item in LedService.GetLeds())

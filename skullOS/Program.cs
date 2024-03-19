@@ -40,6 +40,7 @@ namespace skullOS
                     break;
             }
 
+            await Console.Out.WriteLineAsync("Online and running!");
             await Task.Delay(Timeout.Infinite);
         }
 
