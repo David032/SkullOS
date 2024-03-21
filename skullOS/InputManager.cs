@@ -109,6 +109,7 @@ namespace skullOS
 
         public void SetActiveModule(Module moduleToLoad, string[]? args = null)
         {
+            ActionButton.Press -= activeModule.OnAction;
             if (args == null)
             {
                 LogMessage("No modules provided, so nothing to set as active");
