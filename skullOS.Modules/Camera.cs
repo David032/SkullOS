@@ -1,7 +1,6 @@
 using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.Modules.Interfaces;
-using System.Diagnostics;
 
 namespace skullOS.Modules
 {
@@ -65,7 +64,7 @@ namespace skullOS.Modules
                 LedService.BlinkLight("CameraLight");
             }
             BuzzerService.Buzzer.PlayTone(1500, 500);
-            var result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
+            string result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
             LogMessage(result);
         }
 
@@ -74,34 +73,17 @@ namespace skullOS.Modules
         //TODO: Still needs quality setting
         public async Task RecordShortVideo()
         {
-            eventHandled = new TaskCompletionSource<bool>();
-
-            using Process videoRecording = new();
-            string args = string.Empty;
-            if (useMic)
+            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
             {
-                args = " --codec libav --hflip --vflip --libav-audio --width 1920 --height 1080 -t 30000 -o " + $"{FileManager.GetSkullDirectory()}/Captures/"
-                    + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
+                LedService.TurnOn("CameraLight");
             }
-            else
+            BuzzerService.Buzzer.PlayTone(1500, 500);
+            string result = await CameraService.RecordShortVideoAsync($"{FileManager.GetSkullDirectory()}/Captures/", false);
+            LogMessage(result);
+            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
             {
-                args = "--codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{FileManager.GetSkullDirectory()}/Captures/"
-                    + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
+                LedService.TurnOff("CameraLight");
             }
-            videoRecording.StartInfo.UseShellExecute = false;
-            videoRecording.StartInfo.FileName = "libcamera-vid";
-            videoRecording.EnableRaisingEvents = true;
-            videoRecording.Exited += VideoRecording_Exited;
-#if DEBUG
-            await Console.Out.WriteLineAsync(videoRecording.StartInfo.Arguments);
-#endif
-            videoRecording.Start();
-            await Task.WhenAny(eventHandled.Task, Task.Delay(30000));
-        }
-
-        private void VideoRecording_Exited(object? sender, EventArgs e)
-        {
-            eventHandled.TrySetResult(true);
         }
 
         public override void OnEnable(string[] args)
@@ -118,15 +100,15 @@ namespace skullOS.Modules
             return "Camera";
         }
 
-        public override void OnAction(object? sender, EventArgs e)
+        public override async void OnAction(object? sender, EventArgs e)
         {
             switch (CameraMode)
             {
                 case CameraMode.Image:
-                    TakePicture();
+                    await TakePicture();
                     break;
                 case CameraMode.ShortVideo:
-                    RecordShortVideo();
+                    await RecordShortVideo();
                     break;
                 case CameraMode.ContinuousVideo:
                     break;

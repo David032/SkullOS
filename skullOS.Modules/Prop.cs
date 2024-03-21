@@ -56,7 +56,7 @@ namespace skullOS.Modules
                 LedService = new LedService(pins);
                 foreach (var item in LedService.GetLeds())
                 {
-                    int pin = item.Value;
+                    string pin = item.Key;
                     LedService.TurnOn(pin);
                 }
             }

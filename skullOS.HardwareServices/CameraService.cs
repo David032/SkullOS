@@ -1,5 +1,6 @@
 using Iot.Device.Camera.Settings;
 using Iot.Device.Common;
+using skullOS.HardwareServices.Exceptions;
 using skullOS.HardwareServices.Interfaces;
 using System.Diagnostics;
 
@@ -11,7 +12,6 @@ namespace skullOS.HardwareServices
         int xResolution;
         int yResolution;
 
-        private ProcessSettings _processSettings;
 
         public CameraService(int x = 2592, int y = 1944)
         {
