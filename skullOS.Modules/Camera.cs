@@ -1,6 +1,7 @@
 using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.Modules.Interfaces;
+using System.Diagnostics;
 
 namespace skullOS.Modules
 {
@@ -20,6 +21,7 @@ namespace skullOS.Modules
         public BuzzerService BuzzerService;
 
         bool useMic = false;
+        private TaskCompletionSource<bool> eventHandled;
 
         public Camera()
         {
@@ -56,7 +58,7 @@ namespace skullOS.Modules
             BuzzerService = new BuzzerService(13);
         }
 
-        public async void TakePicture()
+        public async Task TakePicture()
         {
             if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
             {
@@ -67,15 +69,39 @@ namespace skullOS.Modules
             LogMessage(result);
         }
 
-        public void RecordShortVideo()
+        //Why are we back to hard-calling libcamera again?! :(
+        //Remember that this needs rpicam-apps full to be installed(lite os doesn't come with it)
+        //TODO: Still needs quality setting
+        public async Task RecordShortVideo()
         {
-            string audioLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.mp3";
-            string videoLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}";
-            //CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
-            if (useMic && MicrophoneService != null)
+            eventHandled = new TaskCompletionSource<bool>();
+
+            using Process videoRecording = new();
+            string args = string.Empty;
+            if (useMic)
             {
-                MicrophoneService.Microphone.Record(30, audioLocation);
+                args = " --codec libav --hflip --vflip --libav-audio --width 1920 --height 1080 -t 30000 -o " + $"{FileManager.GetSkullDirectory()}/Captures/"
+                    + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
             }
+            else
+            {
+                args = "--codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{FileManager.GetSkullDirectory()}/Captures/"
+                    + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
+            }
+            videoRecording.StartInfo.UseShellExecute = false;
+            videoRecording.StartInfo.FileName = "libcamera-vid";
+            videoRecording.EnableRaisingEvents = true;
+            videoRecording.Exited += VideoRecording_Exited;
+#if DEBUG
+            await Console.Out.WriteLineAsync(videoRecording.StartInfo.Arguments);
+#endif
+            videoRecording.Start();
+            await Task.WhenAny(eventHandled.Task, Task.Delay(30000));
+        }
+
+        private void VideoRecording_Exited(object? sender, EventArgs e)
+        {
+            eventHandled.TrySetResult(true);
         }
 
         public override void OnEnable(string[] args)

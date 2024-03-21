@@ -17,17 +17,15 @@ namespace skullOS.API.Controllers
         }
 
         [HttpGet("TakePicture")]
-        public string TakePicture()
+        public async Task TakePicture()
         {
-            _module.TakePicture();
-            return "Picture Taken!";
+            await _module.TakePicture();
         }
 
         [HttpGet("RecordVideo")]
-        public string RecordVideo()
+        public async Task RecordVideo()
         {
-            _module.RecordShortVideo();
-            return "Video Recorded!";
+            await _module.RecordShortVideo();
         }
     }
 }

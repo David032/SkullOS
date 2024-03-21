@@ -1,6 +1,5 @@
 using Iot.Device.Camera.Settings;
 using Iot.Device.Common;
-using skullOS.HardwareServices.Exceptions;
 using skullOS.HardwareServices.Interfaces;
 using System.Diagnostics;
 
@@ -12,6 +11,7 @@ namespace skullOS.HardwareServices
         int xResolution;
         int yResolution;
 
+        private ProcessSettings _processSettings;
 
         public CameraService(int x = 2592, int y = 1944)
         {
@@ -48,7 +48,7 @@ namespace skullOS.HardwareServices
             catch (CameraErrorException e)
             {
                 await Console.Out.WriteLineAsync(e.Message);
-                return "Camera errored when taking picture!";
+                return "Camera errored when recording video!";
             }
 
             return $"({DateTime.Now}) Short video recorded!";
@@ -64,26 +64,23 @@ namespace skullOS.HardwareServices
                 .WithResolution(xResolution, yResolution);
             var args = builder.GetArguments();
 
+            _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
             using var proc = new ProcessRunner(_processSettings);
-            Console.WriteLine("Using the following command line:");
-            Console.WriteLine(proc.GetFullCommandLine(args));
-            Console.WriteLine();
 
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string? filename = fileLocation + timestamp + ".jpg";
-            //string? filename = $"{DateTime.Now:yyyyMMddHHmmss}.jpg"; //Fakename
+
             try
             {
                 using var file = File.OpenWrite(filename);
                 await proc.ExecuteAsync(args, file);
             }
-            catch (CameraErrorException e)
+            catch (Exception)
             {
-                await Console.Out.WriteLineAsync(e.Message);
-                return "Camera errored when taking picture!";
+                await Console.Out.WriteLineAsync("Cam errored when taking picture!");
             }
 
-            return filename;
+            return $"({DateTime.Now}) Picture taken!";
         }
     }
 }
