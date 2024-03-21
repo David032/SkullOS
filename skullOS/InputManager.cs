@@ -90,8 +90,6 @@ namespace skullOS
 
         private void ToggleButton_Press(object? sender, EventArgs e)
         {
-            Console.WriteLine("Toggle button pressed!");
-            Console.WriteLine("There are: " + inputModules.Count);
             if (index + 1 < inputModules.Count)
             {
                 index += 1;
@@ -101,15 +99,14 @@ namespace skullOS
                 index = 0;
             }
 
-            Console.WriteLine("Index is now: " + index);
             var moduleToSetActive = inputModules[index];
-            Console.WriteLine("Attempting to load " + moduleToSetActive.Item2 + " with the args " + moduleToSetActive.Item3);
+            LogMessage("Attempting to load " + moduleToSetActive.Item2 + " with the args " + moduleToSetActive.Item3);
+            ActionButton.Press -= activeModule.OnAction;
             SetActiveModule(moduleToSetActive.Item2, [moduleToSetActive.Item3]);
         }
 
         public void SetActiveModule(Module moduleToLoad, string[]? args = null)
         {
-            ActionButton.Press -= activeModule.OnAction;
             if (args == null)
             {
                 LogMessage("No modules provided, so nothing to set as active");

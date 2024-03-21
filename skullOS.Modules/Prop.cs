@@ -27,9 +27,9 @@ namespace skullOS.Modules
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
-            propSettings.TryGetValue("Sounds", out string state);
-            bool useSounds = bool.Parse(state);
 
+            propSettings.TryGetValue("Sounds", out string soundsState);
+            bool useSounds = bool.Parse(soundsState);
             if (propSettings.ContainsKey("Sounds") && useSounds)
             {
                 SpeakerService = new SpeakerService();
@@ -42,7 +42,10 @@ namespace skullOS.Modules
                 PlayIdleSound.Elapsed += PlayIdleSound_Elapsed;
                 PlayIdleSound.Start();
             }
-            if (propSettings.ContainsKey("Lights"))
+
+            propSettings.TryGetValue("Lights", out string lightsState);
+            bool useLights = bool.Parse(lightsState);
+            if (propSettings.ContainsKey("Lights") && useLights)
             {
                 //Left and right eye, these are next to each other so it should be easy to tell
                 Dictionary<string, int> pins = new Dictionary<string, int>
@@ -57,7 +60,10 @@ namespace skullOS.Modules
                     LedService.TurnOn(pin);
                 }
             }
-            if (propSettings.ContainsKey("Servos"))
+
+            propSettings.TryGetValue("Servos", out string servosState);
+            bool useServos = bool.Parse(servosState);
+            if (propSettings.ContainsKey("Servos") && useServos)
             {
                 SoftwarePwmChannel leftPWM = new SoftwarePwmChannel(5, 50);
                 leftFlap = new ServoMotor(leftPWM);
