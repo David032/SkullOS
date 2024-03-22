@@ -15,10 +15,7 @@ namespace skullOS.Modules
 
         public void LogMessage(string message)
         {
-            if (logger != null)
-            {
-                logger.LogMessage(message);
-            }
+            logger?.LogMessage(message);
         }
     }
 }

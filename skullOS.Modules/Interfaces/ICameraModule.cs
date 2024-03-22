@@ -2,7 +2,7 @@
 {
     public interface ICameraModule
     {
-        void RecordShortVideo();
-        void TakePicture();
+        Task RecordShortVideo();
+        Task TakePicture();
     }
 }

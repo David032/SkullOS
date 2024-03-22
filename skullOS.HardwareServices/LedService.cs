@@ -16,28 +16,29 @@ namespace skullOS.HardwareServices
 
         public async void BlinkLight(string light)
         {
-            int pin = LEDs[light];
-            TurnOn(pin);
+            TurnOn(light);
             await Task.Delay(750);
-            TurnOff(pin);
+            TurnOff(light);
         }
 
-        public void TurnOn(int Pin)
+        public void TurnOn(string light)
         {
-            if (!controller.IsPinOpen(Pin))
+            int pin = LEDs[light];
+            if (!controller.IsPinOpen(pin))
             {
-                controller.OpenPin(Pin, PinMode.Output);
+                controller.OpenPin(pin, PinMode.Output);
             }
-            controller.Write(Pin, PinValue.High);
+            controller.Write(pin, PinValue.High);
         }
 
-        public void TurnOff(int Pin)
+        public void TurnOff(string light)
         {
-            if (!controller.IsPinOpen(Pin))
+            int pin = LEDs[light];
+            if (!controller.IsPinOpen(pin))
             {
-                controller.OpenPin(Pin, PinMode.Output);
+                controller.OpenPin(pin, PinMode.Output);
             }
-            controller.Write(Pin, PinValue.Low);
+            controller.Write(pin, PinValue.Low);
         }
 
         public Dictionary<string, int> GetLeds()

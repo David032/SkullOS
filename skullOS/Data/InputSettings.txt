@@ -1,1 +1,2 @@
 Camera(Image)=0
+Camera(ShortVideo)=0

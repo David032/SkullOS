@@ -30,7 +30,7 @@ namespace skullOS.Modules
 
         private void TakePicture_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            cameraService.TakePictureAsync(directory, 1920, 1080);
+            cameraService.TakePictureAsync(directory);
         }
 
         public override void OnAction(object? sender, EventArgs e)

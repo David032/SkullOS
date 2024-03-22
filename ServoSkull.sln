@@ -17,7 +17,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE38A10C-F0BB-40B5-B1E6-8CB16C6E452C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Pinout.md = Pinout.md
+		Mk1Pinout-Outdated.md = Mk1Pinout-Outdated.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "skullOS.API", "skullOS.API\skullOS.API.csproj", "{5E1EC385-4B61-4E8C-82C7-46695A33AC72}"

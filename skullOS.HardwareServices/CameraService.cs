@@ -1,45 +1,80 @@
-﻿using Iot.Device.Camera.Settings;
+using Iot.Device.Camera.Settings;
 using Iot.Device.Common;
-using Iot.Device.Media;
+using skullOS.HardwareServices.Exceptions;
 using skullOS.HardwareServices.Interfaces;
+using System.Diagnostics;
 
 namespace skullOS.HardwareServices
 {
     public class CameraService : ICameraService
     {
-        public VideoDevice Camera { get; private set; }
+        private ProcessSettings _processSettings;
+        int xResolution;
+        int yResolution;
 
-        private readonly ProcessSettings _processSettings;
 
-
-        public CameraService(VideoConnectionSettings? cameraSettings = null)
+        public CameraService(int x = 2592, int y = 1944)
         {
-            cameraSettings ??= new(busId: 0, captureSize: (2592, 1944), pixelFormat: VideoPixelFormat.JPEG);
-            Camera = VideoDevice.Create(cameraSettings);
-            Camera.Settings.HorizontalFlip = true;
-            Camera.Settings.VerticalFlip = true;
-
             _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
+            xResolution = x;
+            yResolution = y;
         }
 
-        public async Task<string> TakePictureAsync(string fileLocation, int x = 2592, int y = 1944)
+        //Why are we back to hard-calling libcamera again?! :(
+        //Remember that this needs rpicam-apps full to be installed(lite os doesn't come with it)
+        //TODO: Still needs quality setting
+        public async Task<string> RecordShortVideoAsync(string fileLocation, bool useMic)
+        {
+            try
+            {
+                using Process videoRecording = new();
+                string args = string.Empty;
+                if (useMic)
+                {
+                    args = " --codec libav --hflip --vflip --libav-audio --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
+                        + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
+                }
+                else
+                {
+                    args = " --codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
+                        + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
+                }
+                videoRecording.StartInfo.UseShellExecute = false;
+                videoRecording.StartInfo.FileName = "libcamera-vid";
+                videoRecording.StartInfo.Arguments = args;
+                videoRecording.EnableRaisingEvents = true;
+#if DEBUG
+                await Console.Out.WriteLineAsync("Running:");
+                await Console.Out.WriteLineAsync(videoRecording.StartInfo.FileName + videoRecording.StartInfo.Arguments);
+#endif
+                videoRecording.Start();
+                await Task.WhenAny(Task.Delay(30000));
+            }
+            catch (CameraErrorException e)
+            {
+                await Console.Out.WriteLineAsync(e.Message);
+                return "Camera errored when recording video!";
+            }
+
+            return $"({DateTime.Now}) Short video recorded!";
+        }
+
+        public async Task<string> TakePictureAsync(string fileLocation)
         {
             var builder = new CommandOptionsBuilder()
                 .WithTimeout(1)
                 .WithVflip()
                 .WithHflip()
                 .WithPictureOptions(quality: 100)
-                .WithResolution(x, y);
+                .WithResolution(xResolution, yResolution);
             var args = builder.GetArguments();
 
+            _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
             using var proc = new ProcessRunner(_processSettings);
-            Console.WriteLine("Using the following command line:");
-            Console.WriteLine(proc.GetFullCommandLine(args));
-            Console.WriteLine();
 
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string? filename = fileLocation + timestamp + ".jpg";
-            //string? filename = $"{DateTime.Now:yyyyMMddHHmmss}.jpg"; //Fakename
+
             try
             {
                 using var file = File.OpenWrite(filename);
@@ -47,10 +82,10 @@ namespace skullOS.HardwareServices
             }
             catch (Exception)
             {
-                await Console.Out.WriteLineAsync("Cam errored!");
+                await Console.Out.WriteLineAsync("Cam errored when taking picture!");
             }
 
-            return filename;
+            return $"({DateTime.Now}) Picture taken!";
         }
     }
 }

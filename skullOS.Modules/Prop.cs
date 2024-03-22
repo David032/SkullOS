@@ -28,7 +28,9 @@ namespace skullOS.Modules
         {
             propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
 
-            if (propSettings.ContainsKey("Sounds"))
+            propSettings.TryGetValue("Sounds", out string soundsState);
+            bool useSounds = bool.Parse(soundsState);
+            if (propSettings.ContainsKey("Sounds") && useSounds)
             {
                 SpeakerService = new SpeakerService();
                 SpeakerService.PlayAudio(@"Resources/computer-startup-music.mp3"); //This one won't await :(
@@ -40,22 +42,28 @@ namespace skullOS.Modules
                 PlayIdleSound.Elapsed += PlayIdleSound_Elapsed;
                 PlayIdleSound.Start();
             }
-            if (propSettings.ContainsKey("Lights"))
+
+            propSettings.TryGetValue("Lights", out string lightsState);
+            bool useLights = bool.Parse(lightsState);
+            if (propSettings.ContainsKey("Lights") && useLights)
             {
                 //Left and right eye, these are next to each other so it should be easy to tell
                 Dictionary<string, int> pins = new Dictionary<string, int>
                     {
-                        { "LeftEye", 22 },
-                        {"RightEye", 23 }
+                        { "LeftEye", 26 },
+                        {"RightEye", 26 }
                     };
                 LedService = new LedService(pins);
                 foreach (var item in LedService.GetLeds())
                 {
-                    int pin = item.Value;
+                    string pin = item.Key;
                     LedService.TurnOn(pin);
                 }
             }
-            if (propSettings.ContainsKey("Servos"))
+
+            propSettings.TryGetValue("Servos", out string servosState);
+            bool useServos = bool.Parse(servosState);
+            if (propSettings.ContainsKey("Servos") && useServos)
             {
                 SoftwarePwmChannel leftPWM = new SoftwarePwmChannel(5, 50);
                 leftFlap = new ServoMotor(leftPWM);
@@ -71,7 +79,10 @@ namespace skullOS.Modules
             Random random = new Random();
             int selection = random.Next(0, numberOfIdles + 1);
             SpeakerService.PlayAudio(sounds[selection]);
-            if (propSettings.ContainsKey("Servos"))
+
+            propSettings.TryGetValue("Servos", out string servosState);
+            bool useServos = bool.Parse(servosState);
+            if (propSettings.ContainsKey("Servos") && useServos)
             {
                 if (random.NextSingle() <= 0.5)
                 {

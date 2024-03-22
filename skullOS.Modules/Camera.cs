@@ -1,4 +1,4 @@
-﻿using skullOS.Core;
+using skullOS.Core;
 using skullOS.HardwareServices;
 using skullOS.Modules.Interfaces;
 
@@ -15,11 +15,15 @@ namespace skullOS.Modules
     {
         public CameraService CameraService;
         public MicrophoneService? MicrophoneService = null;
+        public SpeakerService? SpeakerService = null;
         public LedService? LedService = null;
         public CameraMode CameraMode = CameraMode.Image;
-        public BuzzerService BuzzerService;
+        public BuzzerService? BuzzerService = null;
 
         bool useMic = false;
+        bool useSpeaker = false;
+        bool useBuzzer = false;
+        bool isActive = false;
 
         public Camera()
         {
@@ -52,32 +56,92 @@ namespace skullOS.Modules
                     LedService = new LedService(pins);
                 }
             }
-
-            BuzzerService = new BuzzerService(13);
+            if (cameraSettings.ContainsKey("UseBuzzer"))
+            {
+                if (cameraSettings.TryGetValue("UseBuzzer", out string shouldUseBuzzer))
+                {
+                    if (bool.Parse(shouldUseBuzzer))
+                    {
+                        BuzzerService = new BuzzerService(13);
+                        useBuzzer = true;
+                    }
+                    else
+                    {
+                        //No Mic desired
+                    }
+                }
+            }
+            if (cameraSettings.ContainsKey("UseSpeaker"))
+            {
+                if (cameraSettings.TryGetValue("UseSpeaker", out string shouldUseSpeaker))
+                {
+                    if (bool.Parse(shouldUseSpeaker))
+                    {
+                        SpeakerService = new SpeakerService();
+                        useSpeaker = true;
+                    }
+                    else
+                    {
+                        //No Mic desired
+                    }
+                }
+            }
         }
 
-        public async void TakePicture()
+        public async Task TakePicture()
         {
-            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+            if (!isActive)
             {
-                LedService.BlinkLight("CameraLight");
+                isActive = true;
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.BlinkLight("CameraLight");
+                }
+                if (useBuzzer)
+                {
+                    BuzzerService.Buzzer.PlayTone(1500, 500);
+                }
+                if (useSpeaker)
+                {
+                    _ = SpeakerService.PlayAudio(@"Resources\51360__thecheeseman__camera_snap1.mp3");
+                }
+                string result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
+                LogMessage(result);
+                isActive = false;
             }
-            BuzzerService.Buzzer.PlayTone(1500, 500);
-            await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
-            LogMessage($"({DateTime.Now}) Picture taken!");
 
-            //CameraService.Camera.Capture($"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.jpg");
         }
 
-        public void RecordShortVideo()
+        public async Task RecordShortVideo()
         {
-            string audioLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}.mp3";
-            string videoLocation = $"{FileManager.GetSkullDirectory()}/Captures/{DateTime.Now:yyyyMMddHHmmss}";
-            //CameraService.RecordVideoAsync(FileManager.GetSkullDirectory() + "/Captures", 30);
-            if (useMic && MicrophoneService != null)
+            if (!isActive)
             {
-                MicrophoneService.Microphone.Record(30, audioLocation);
+                isActive = true;
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.TurnOn("CameraLight");
+                }
+                if (useBuzzer)
+                {
+                    BuzzerService.Buzzer.PlayTone(1500, 500);
+                }
+                if (useSpeaker)
+                {
+                    _ = SpeakerService.PlayAudio(@"Resources\195912__acpascal__start-beep.mp3");
+                }
+                string result = await CameraService.RecordShortVideoAsync($"{FileManager.GetSkullDirectory()}/Captures/", false);
+                LogMessage(result);
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.TurnOff("CameraLight");
+                }
+                if (useSpeaker)
+                {
+                    //Play camera stop sound
+                }
+                isActive = false;
             }
+
         }
 
         public override void OnEnable(string[] args)
@@ -94,15 +158,15 @@ namespace skullOS.Modules
             return "Camera";
         }
 
-        public override void OnAction(object? sender, EventArgs e)
+        public override async void OnAction(object? sender, EventArgs e)
         {
             switch (CameraMode)
             {
                 case CameraMode.Image:
-                    TakePicture();
+                    await TakePicture();
                     break;
                 case CameraMode.ShortVideo:
-                    RecordShortVideo();
+                    await RecordShortVideo();
                     break;
                 case CameraMode.ContinuousVideo:
                     break;
