@@ -79,7 +79,10 @@ namespace skullOS.Modules
             Random random = new Random();
             int selection = random.Next(0, numberOfIdles + 1);
             SpeakerService.PlayAudio(sounds[selection]);
-            if (propSettings.ContainsKey("Servos"))
+
+            propSettings.TryGetValue("Servos", out string servosState);
+            bool useServos = bool.Parse(servosState);
+            if (propSettings.ContainsKey("Servos") && useServos)
             {
                 if (random.NextSingle() <= 0.5)
                 {

@@ -5,7 +5,8 @@ namespace skullOS.HardwareServices
 {
     /// <summary>
     /// Service to communicate with audio output
-    /// Requires `sudo apt install --no-install-recommends vlc-bin vlc-plugin-base` to have been ran first
+    /// Requires `sudo apt install --no-install-recommends vlc-bin vlc-plugin-base` to have been ran first which isn't on lite os
+    /// If deploying to a pizero, may also need to do the following: https://learn.adafruit.com/adafruit-max98357-i2s-class-d-mono-amp/raspberry-pi-usage
     /// </summary>
     public class SpeakerService : ISpeakerService
     {
