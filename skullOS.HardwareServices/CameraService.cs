@@ -20,6 +20,9 @@ namespace skullOS.HardwareServices
             yResolution = y;
         }
 
+        //Why are we back to hard-calling libcamera again?! :(
+        //Remember that this needs rpicam-apps full to be installed(lite os doesn't come with it)
+        //TODO: Still needs quality setting
         public async Task<string> RecordShortVideoAsync(string fileLocation, bool useMic)
         {
             try
@@ -33,14 +36,16 @@ namespace skullOS.HardwareServices
                 }
                 else
                 {
-                    args = "--codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
+                    args = " --codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
                         + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
                 }
                 videoRecording.StartInfo.UseShellExecute = false;
                 videoRecording.StartInfo.FileName = "libcamera-vid";
+                videoRecording.StartInfo.Arguments = args;
                 videoRecording.EnableRaisingEvents = true;
 #if DEBUG
-                await Console.Out.WriteLineAsync(videoRecording.StartInfo.Arguments);
+                await Console.Out.WriteLineAsync("Running:");
+                await Console.Out.WriteLineAsync(videoRecording.StartInfo.FileName + videoRecording.StartInfo.Arguments);
 #endif
                 videoRecording.Start();
                 await Task.WhenAny(Task.Delay(30000));

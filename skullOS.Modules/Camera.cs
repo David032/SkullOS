@@ -20,7 +20,7 @@ namespace skullOS.Modules
         public BuzzerService BuzzerService;
 
         bool useMic = false;
-        private TaskCompletionSource<bool> eventHandled;
+        bool isActive = false;
 
         public Camera()
         {
@@ -59,31 +59,40 @@ namespace skullOS.Modules
 
         public async Task TakePicture()
         {
-            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+            if (!isActive)
             {
-                LedService.BlinkLight("CameraLight");
+                isActive = true;
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.BlinkLight("CameraLight");
+                }
+                BuzzerService.Buzzer.PlayTone(1500, 500);
+                string result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
+                LogMessage(result);
+                isActive = false;
             }
-            BuzzerService.Buzzer.PlayTone(1500, 500);
-            string result = await CameraService.TakePictureAsync($"{FileManager.GetSkullDirectory()}/Captures/");
-            LogMessage(result);
+
         }
 
-        //Why are we back to hard-calling libcamera again?! :(
-        //Remember that this needs rpicam-apps full to be installed(lite os doesn't come with it)
-        //TODO: Still needs quality setting
         public async Task RecordShortVideo()
         {
-            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+            if (!isActive)
             {
-                LedService.TurnOn("CameraLight");
+                isActive = true;
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.TurnOn("CameraLight");
+                }
+                BuzzerService.Buzzer.PlayTone(1500, 500);
+                string result = await CameraService.RecordShortVideoAsync($"{FileManager.GetSkullDirectory()}/Captures/", false);
+                LogMessage(result);
+                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                {
+                    LedService.TurnOff("CameraLight");
+                }
+                isActive = false;
             }
-            BuzzerService.Buzzer.PlayTone(1500, 500);
-            string result = await CameraService.RecordShortVideoAsync($"{FileManager.GetSkullDirectory()}/Captures/", false);
-            LogMessage(result);
-            if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
-            {
-                LedService.TurnOff("CameraLight");
-            }
+
         }
 
         public override void OnEnable(string[] args)
