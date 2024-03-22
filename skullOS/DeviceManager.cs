@@ -9,7 +9,7 @@ namespace skullOS
         //Task apiStatus;
         List<Module> Modules;
         GpioController Controller;
-        int powerLed = 23;
+        int powerLed = 12;
         int networkLED = 12;
 
         public DeviceManager(GpioController gpio)

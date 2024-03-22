@@ -50,8 +50,7 @@ namespace skullOS.Modules
                 //Left and right eye, these are next to each other so it should be easy to tell
                 Dictionary<string, int> pins = new Dictionary<string, int>
                     {
-                        { "LeftEye", 26 },
-                        {"RightEye", 26 }
+                        { "Power", 16 },
                     };
                 LedService = new LedService(pins);
                 foreach (var item in LedService.GetLeds())

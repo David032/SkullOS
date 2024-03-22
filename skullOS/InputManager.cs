@@ -9,7 +9,7 @@ namespace skullOS
     {
         GpioButton ActionButton;
         GpioButton ToggleButton;
-        int actionButtonPin = 24; //25
+        int actionButtonPin = 25; //25
         int toggleButtonPin = 23; //26
         private Module? activeModule;
         List<(int, Module, string)> inputModules = [];
