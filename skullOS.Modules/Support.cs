@@ -13,19 +13,35 @@ namespace skullOS.Modules
         GpioController controller;
         ISpeakerService speakerService;
         static Timer? LowBatteryAlert;
-        double interval = 60000;
-        int pin = 4;
+        readonly double interval = 60000;
+        int pin; //Defaults to Pimoroni's Lipo shim,
 
-        public Support()
+        public Support(GpioController gpioController = null, ISpeakerService speaker = null, int signalPin = 4)
         {
+            pin = signalPin;
             LowBatteryAlert = new Timer(interval)
             {
                 AutoReset = true,
             };
             LowBatteryAlert.Elapsed += LowBatteryAlert_Elapsed;
 
-            speakerService = new SpeakerService();
-            controller = new GpioController();
+            if (speaker == null)
+            {
+                speakerService = new SpeakerService();
+            }
+            else
+            {
+                speakerService = speaker;
+            }
+
+            if (gpioController == null)
+            {
+                controller = new GpioController();
+            }
+            else
+            {
+                controller = gpioController;
+            }
             controller.OpenPin(pin);
             controller.RegisterCallbackForPinValueChangedEvent(pin, PinEventTypes.Rising, OnLowBattery);
         }

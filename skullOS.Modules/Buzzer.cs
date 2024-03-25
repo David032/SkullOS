@@ -12,9 +12,16 @@ namespace skullOS.Modules
     {
         BuzzerService PwmBuzzer;
         MelodyPlayer Player;
-        public Buzzer()
+        public Buzzer(BuzzerService buzzerService = null, int pwmPin = 13)
         {
-            PwmBuzzer = new BuzzerService(13);
+            if (buzzerService == null)
+            {
+                PwmBuzzer = new BuzzerService(pwmPin);
+            }
+            else
+            {
+                PwmBuzzer = buzzerService;
+            }
             Player = new MelodyPlayer(PwmBuzzer.Buzzer);
         }
 
