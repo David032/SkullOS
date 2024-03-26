@@ -46,11 +46,20 @@ namespace skullOS.Core
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    DirectoryInfo rootDirectory = Directory.CreateDirectory("/skullOS-TestData", unixCreateMode:
-                                UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
-                                UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
-                                UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
-                    rootDirectoryPath = rootDirectory.FullName;
+                    try
+                    {
+                        DirectoryInfo rootDirectory = Directory.CreateDirectory("/skullOS-TestData", unixCreateMode:
+                            UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                            UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                            UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                        rootDirectoryPath = rootDirectory.FullName;
+                    }
+                    catch (Exception)
+                    {
+                        //When running on Github runner, doesn't seem to like creating a directory
+                        rootDirectoryPath = Directory.GetCurrentDirectory();
+                    }
+
                 }
 
             }

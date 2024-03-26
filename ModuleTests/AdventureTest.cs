@@ -9,7 +9,7 @@ namespace ModuleTests
     {
         public AdventureTest()
         {
-            FileManager.CreateSkullDirectory(true, true);
+            FileManager.CreateSkullDirectory(false, true);
         }
 
         [Fact]

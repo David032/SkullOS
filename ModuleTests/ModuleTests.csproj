@@ -27,6 +27,7 @@
     <ProjectReference Include="..\skullOS.Core\skullOS.Core.csproj" />
     <ProjectReference Include="..\skullOS.HardwareServices\skullOS.HardwareServices.csproj" />
     <ProjectReference Include="..\skullOS.Modules\skullOS.Modules.csproj" />
+    <ProjectReference Include="..\skullOS.Tests\skullOS.Tests.csproj" />
   </ItemGroup>
 
 </Project>
