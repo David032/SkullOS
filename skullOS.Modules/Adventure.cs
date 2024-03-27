@@ -40,7 +40,7 @@ namespace skullOS.Modules
             cameraService.TakePictureAsync(directory);
         }
 
-        public static Timer GetTimelapseController()
+        public Timer GetTimelapseController()
         {
             return takePicture;
         }
