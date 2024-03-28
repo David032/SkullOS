@@ -30,4 +30,8 @@
     <ProjectReference Include="..\skullOS.Tests\skullOS.Tests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+
 </Project>
