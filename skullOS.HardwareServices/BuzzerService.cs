@@ -10,5 +10,10 @@ namespace skullOS.HardwareServices
         {
             Buzzer = new Buzzer(pinNumber);
         }
+
+        public void SetBuzzer(int pinNumber)
+        {
+            Buzzer = new Buzzer(pinNumber);
+        }
     }
 }

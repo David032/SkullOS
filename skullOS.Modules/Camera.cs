@@ -15,18 +15,22 @@ namespace skullOS.Modules
     public class Camera : Module, ICameraModule
     {
         public ICameraService CameraService;
-        public MicrophoneService? MicrophoneService = null;
-        public SpeakerService? SpeakerService = null;
-        public LedService? LedService = null;
+        public IMicrophoneService? MicrophoneService = null;
+        public ISpeakerService? SpeakerService = null;
+        public ILedService? LedService = null;
+        public IBuzzerService? BuzzerService = null;
+
+
         public CameraMode CameraMode = CameraMode.Image;
-        public BuzzerService? BuzzerService = null;
 
         bool useMic = false;
         bool useSpeaker = false;
         bool useBuzzer = false;
         bool isActive = false;
 
-        public Camera(ICameraService camService = null, string configFile = @"Data/CameraSettings.txt")
+        public Camera(ICameraService camService = null, IMicrophoneService micService = null,
+                        ISpeakerService spkService = null, ILedService ledService = null, IBuzzerService buzService = null,
+                        string configFile = @"Data/CameraSettings.txt")
         {
             FileManager.CreateSubDirectory("Captures");
             var cameraSettings = SettingsLoader.LoadConfig(configFile);
@@ -46,7 +50,15 @@ namespace skullOS.Modules
                 {
                     if (bool.Parse(shouldUseMic))
                     {
-                        MicrophoneService = new MicrophoneService();
+                        //Might this be null coalescable?
+                        if (micService == null)
+                        {
+                            MicrophoneService = new MicrophoneService();
+                        }
+                        else
+                        {
+                            MicrophoneService = micService;
+                        }
                         useMic = true;
                     }
                     else
@@ -63,7 +75,17 @@ namespace skullOS.Modules
                     {
                         { "CameraLight", int.Parse(lightPin) }
                     };
-                    LedService = new LedService(pins);
+
+                    if (ledService == null)
+                    {
+                        LedService = new LedService(pins);
+                    }
+                    else
+                    {
+                        LedService = ledService;
+                        LedService.SetLeds(pins);
+                    }
+
                 }
             }
             if (cameraSettings.ContainsKey("UseBuzzer"))
@@ -72,12 +94,21 @@ namespace skullOS.Modules
                 {
                     if (bool.Parse(shouldUseBuzzer))
                     {
-                        BuzzerService = new BuzzerService(13);
+                        //This should be reading from the file!
+                        if (buzService == null)
+                        {
+                            BuzzerService = new BuzzerService(13);
+                        }
+                        else
+                        {
+                            BuzzerService = buzService;
+                            BuzzerService.SetBuzzer(13);
+                        }
                         useBuzzer = true;
                     }
                     else
                     {
-                        //No Mic desired
+                        //No buzzer desired
                     }
                 }
             }
@@ -87,12 +118,19 @@ namespace skullOS.Modules
                 {
                     if (bool.Parse(shouldUseSpeaker))
                     {
-                        SpeakerService = new SpeakerService();
+                        if (spkService == null)
+                        {
+                            SpeakerService = new SpeakerService();
+                        }
+                        else
+                        {
+                            SpeakerService = spkService;
+                        }
                         useSpeaker = true;
                     }
                     else
                     {
-                        //No Mic desired
+                        //No Speaker desired
                     }
                 }
             }
@@ -103,7 +141,7 @@ namespace skullOS.Modules
             if (!isActive)
             {
                 isActive = true;
-                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                if (LedService != null && LedService.GetLeds().ContainsKey("CameraLight"))
                 {
                     LedService.BlinkLight("CameraLight");
                 }
@@ -127,7 +165,7 @@ namespace skullOS.Modules
             if (!isActive)
             {
                 isActive = true;
-                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                if (LedService != null && LedService.GetLeds().ContainsKey("CameraLight"))
                 {
                     LedService.TurnOn("CameraLight");
                 }
@@ -141,7 +179,7 @@ namespace skullOS.Modules
                 }
                 string result = await CameraService.RecordShortVideoAsync($"{FileManager.GetSkullDirectory()}/Captures/", false);
                 LogMessage(result);
-                if (LedService != null && LedService.LEDs.ContainsKey("CameraLight"))
+                if (LedService != null && LedService.GetLeds().ContainsKey("CameraLight"))
                 {
                     LedService.TurnOff("CameraLight");
                 }
