@@ -12,8 +12,8 @@ namespace skullOS.Modules
     public class Buzzer : Module, IBuzzerModule
     {
         IBuzzerService PwmBuzzer;
-        MelodyPlayer Player;
-        public Buzzer(IBuzzerService buzzerService = null, int pwmPin = 13, MelodyPlayer testPlayer = null)
+        IMelodyPlayer Player;
+        public Buzzer(IBuzzerService buzzerService = null, int pwmPin = 13, IMelodyPlayer testPlayer = null)
         {
             if (buzzerService == null)
             {
@@ -68,7 +68,7 @@ namespace skullOS.Modules
     /// 3rd party class for playing media via a buzzer
     /// Sourced from teh iot samples
     /// </summary>
-    public class MelodyPlayer
+    public class MelodyPlayer : IMelodyPlayer
     {
         private readonly DeviceBuzzer _buzzer;
         private int _wholeNoteDurationInMilliseconds;
@@ -77,7 +77,10 @@ namespace skullOS.Modules
         /// Create MelodyPlayer.
         /// </summary>
         /// <param name="buzzer">Buzzer instance to be played on.</param>
-        public MelodyPlayer(DeviceBuzzer buzzer) => _buzzer = buzzer;
+        public MelodyPlayer(DeviceBuzzer buzzer)
+        {
+            _buzzer = buzzer;
+        }
 
         /// <summary>
         /// Play melody elements sequence.

@@ -8,7 +8,7 @@ using Timer = System.Timers.Timer;
 
 namespace skullOS.Modules
 {
-    public class Support : Module, ISupport
+    public class Support : Module, ISupportModule
     {
         GpioController controller;
         ISpeakerService speakerService;

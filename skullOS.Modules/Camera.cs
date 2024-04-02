@@ -1,5 +1,6 @@
 using skullOS.Core;
 using skullOS.HardwareServices;
+using skullOS.HardwareServices.Interfaces;
 using skullOS.Modules.Interfaces;
 
 namespace skullOS.Modules
@@ -13,7 +14,7 @@ namespace skullOS.Modules
 
     public class Camera : Module, ICameraModule
     {
-        public CameraService CameraService;
+        public ICameraService CameraService;
         public MicrophoneService? MicrophoneService = null;
         public SpeakerService? SpeakerService = null;
         public LedService? LedService = null;
@@ -25,11 +26,20 @@ namespace skullOS.Modules
         bool useBuzzer = false;
         bool isActive = false;
 
-        public Camera()
+        public Camera(ICameraService camService = null, string configFile = @"Data/CameraSettings.txt")
         {
             FileManager.CreateSubDirectory("Captures");
-            var cameraSettings = SettingsLoader.LoadConfig(@"Data/CameraSettings.txt");
-            CameraService = new CameraService();
+            var cameraSettings = SettingsLoader.LoadConfig(configFile);
+
+            if (camService == null)
+            {
+                CameraService = new CameraService();
+            }
+            else
+            {
+                CameraService = camService;
+            }
+
             if (cameraSettings.ContainsKey("UseMic"))
             {
                 if (cameraSettings.TryGetValue("UseMic", out string shouldUseMic))

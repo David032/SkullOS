@@ -16,8 +16,7 @@ namespace ModuleTests
 
             cameraMock = new();
             cameraMock.Setup(camera => camera.TakePictureAsync(It.IsAny<string>())).Returns(Task.FromResult("Pass"));
-            Adventure sut = new(cameraMock.Object);
-
+            sut = new(cameraMock.Object);
         }
 
         [Fact]
