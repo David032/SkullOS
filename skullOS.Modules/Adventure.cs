@@ -14,12 +14,19 @@ namespace skullOS.Modules
         double interval = 30000;
         ICameraService cameraService;
 
-        public Adventure()
+        public Adventure(ICameraService camService = null)
         {
-            var now = DateTime.Now.ToString("M");
+            string now = DateTime.Now.ToString("M");
             FileManager.CreateSubDirectory("Timelapse - " + now);
             directory = FileManager.GetSkullDirectory() + @"/Timelapse - " + now + @"/";
-            cameraService = new CameraService();
+            if (camService == null)
+            {
+                cameraService = new CameraService();
+            }
+            else
+            {
+                cameraService = camService;
+            }
 
 
             takePicture = new Timer(interval);
@@ -31,6 +38,11 @@ namespace skullOS.Modules
         private void TakePicture_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             cameraService.TakePictureAsync(directory);
+        }
+
+        public Timer GetTimelapseController()
+        {
+            return takePicture;
         }
 
         public override void OnAction(object? sender, EventArgs e)

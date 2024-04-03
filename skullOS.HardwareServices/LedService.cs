@@ -45,5 +45,10 @@ namespace skullOS.HardwareServices
         {
             return LEDs;
         }
+
+        public void SetLeds(Dictionary<string, int> ledsToControl)
+        {
+            LEDs = ledsToControl;
+        }
     }
 }

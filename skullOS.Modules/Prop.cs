@@ -10,8 +10,8 @@ namespace skullOS.Modules
 {
     public class Prop : Module, IPropModule
     {
-        public ISpeakerService SpeakerService { get; set; }
-        public ILedService LedService { get; set; }
+        ISpeakerService SpeakerService;
+        ILedService LedService;
 
         static Timer? PlayIdleSound;
         double interval = 30000;
@@ -22,23 +22,31 @@ namespace skullOS.Modules
         ServoMotor rightFlap;
 
         Dictionary<string, string> propSettings;
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public Prop()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public Prop(ISpeakerService speaker = null, ILedService leds = null, string pathToSettings = @"Data/PropSettings.txt")
         {
-            propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
+            propSettings = SettingsLoader.LoadConfig(pathToSettings);
 
             propSettings.TryGetValue("Sounds", out string soundsState);
             bool useSounds = bool.Parse(soundsState);
             if (propSettings.ContainsKey("Sounds") && useSounds)
             {
-                SpeakerService = new SpeakerService();
+                if (speaker == null)
+                {
+                    SpeakerService = new SpeakerService();
+                }
+                else
+                {
+                    SpeakerService = speaker;
+                }
+
                 SpeakerService.PlayAudio(@"Resources/computer-startup-music.mp3"); //This one won't await :(
-                sounds = Directory.GetFiles(@"Resources/Haro/Idles");
+                sounds = Directory.GetFiles(@"Resources/Haro/Idles"); //This shouldn't be hardcoded like this at all >:(
                 numberOfIdles = sounds.Length;
 
-                PlayIdleSound = new Timer(interval);
-                PlayIdleSound.AutoReset = true;
+                PlayIdleSound = new Timer(interval)
+                {
+                    AutoReset = true
+                };
                 PlayIdleSound.Elapsed += PlayIdleSound_Elapsed;
                 PlayIdleSound.Start();
             }
@@ -47,13 +55,23 @@ namespace skullOS.Modules
             bool useLights = bool.Parse(lightsState);
             if (propSettings.ContainsKey("Lights") && useLights)
             {
-                //Left and right eye, these are next to each other so it should be easy to tell
-                Dictionary<string, int> pins = new Dictionary<string, int>
-                    {
+                //LEDs should be read from the file as well
+                Dictionary<string, int> pins = new()
+                {
                         { "LeftEye", 26 },
                         {"RightEye", 26 }
                     };
-                LedService = new LedService(pins);
+
+                if (leds == null)
+                {
+                    LedService = new LedService(pins);
+                }
+                else
+                {
+                    LedService = leds;
+                    LedService.SetLeds(pins);
+                }
+
                 foreach (var item in LedService.GetLeds())
                 {
                     string pin = item.Key;
@@ -65,10 +83,10 @@ namespace skullOS.Modules
             bool useServos = bool.Parse(servosState);
             if (propSettings.ContainsKey("Servos") && useServos)
             {
-                SoftwarePwmChannel leftPWM = new SoftwarePwmChannel(5, 50);
+                SoftwarePwmChannel leftPWM = new(5, 50);
                 leftFlap = new ServoMotor(leftPWM);
                 leftFlap.Start();
-                SoftwarePwmChannel rightPWM = new SoftwarePwmChannel(6, 50);
+                SoftwarePwmChannel rightPWM = new(6, 50);
                 rightFlap = new ServoMotor(rightPWM);
                 rightFlap.Start();
             }

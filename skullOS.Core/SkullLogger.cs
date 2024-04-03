@@ -1,6 +1,8 @@
-﻿namespace skullOS.Core
+﻿using skullOS.Core.Interfaces;
+
+namespace skullOS.Core
 {
-    public class SkullLogger
+    public class SkullLogger : ISkullLogger
     {
         string filepath;
         public SkullLogger()

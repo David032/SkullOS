@@ -6,5 +6,6 @@
         void TurnOff(string Pin);
         void TurnOn(string Pin);
         Dictionary<string, int> GetLeds();
+        void SetLeds(Dictionary<string, int> ledsToControl);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using skullOS.HardwareServices;
+using skullOS.HardwareServices.Interfaces;
 using skullOS.Modules.Exceptions;
 using skullOS.Modules.Interfaces;
 using static skullOS.Modules.BuzzerLibrary;
@@ -10,12 +11,27 @@ namespace skullOS.Modules
 {
     public class Buzzer : Module, IBuzzerModule
     {
-        BuzzerService PwmBuzzer;
-        MelodyPlayer Player;
-        public Buzzer()
+        IBuzzerService PwmBuzzer;
+        IMelodyPlayer Player;
+        public Buzzer(IBuzzerService buzzerService = null, int pwmPin = 13, IMelodyPlayer testPlayer = null)
         {
-            PwmBuzzer = new BuzzerService(13);
-            Player = new MelodyPlayer(PwmBuzzer.Buzzer);
+            if (buzzerService == null)
+            {
+                PwmBuzzer = new BuzzerService(pwmPin);
+            }
+            else
+            {
+                PwmBuzzer = buzzerService;
+            }
+
+            if (testPlayer == null)
+            {
+                Player = new MelodyPlayer(PwmBuzzer.Buzzer);
+            }
+            else
+            {
+                Player = testPlayer;
+            }
         }
 
         public void PlayTune(Tunes tuneToPlay)
@@ -52,7 +68,7 @@ namespace skullOS.Modules
     /// 3rd party class for playing media via a buzzer
     /// Sourced from teh iot samples
     /// </summary>
-    internal class MelodyPlayer
+    public class MelodyPlayer : IMelodyPlayer
     {
         private readonly DeviceBuzzer _buzzer;
         private int _wholeNoteDurationInMilliseconds;
@@ -61,10 +77,13 @@ namespace skullOS.Modules
         /// Create MelodyPlayer.
         /// </summary>
         /// <param name="buzzer">Buzzer instance to be played on.</param>
-        public MelodyPlayer(DeviceBuzzer buzzer) => _buzzer = buzzer;
+        public MelodyPlayer(DeviceBuzzer buzzer)
+        {
+            _buzzer = buzzer;
+        }
 
         /// <summary>
-        /// Play melody elements sequecne.
+        /// Play melody elements sequence.
         /// </summary>
         /// <param name="sequence">Sequence of pauses and notes elements to be played.</param>
         /// <param name="tempo">Tempo of melody playing.</param>
@@ -73,6 +92,21 @@ namespace skullOS.Modules
         {
             _wholeNoteDurationInMilliseconds = GetWholeNoteDurationInMilliseconds(tempo);
             sequence = TransposeSequence(sequence, tonesToTranspose);
+            foreach (var element in sequence)
+            {
+                PlayElement(element);
+            }
+        }
+
+        /// <summary>
+        /// Play melody elements sequence. 0 set transposing for testing
+        /// </summary>
+        /// <param name="sequence">Sequence of pauses and notes elements to be played.</param>
+        /// <param name="tempo">Tempo of melody playing.</param>
+        public void Play(IList<MelodyElement> sequence, int tempo)
+        {
+            _wholeNoteDurationInMilliseconds = GetWholeNoteDurationInMilliseconds(tempo);
+            sequence = TransposeSequence(sequence, 0);
             foreach (var element in sequence)
             {
                 PlayElement(element);
