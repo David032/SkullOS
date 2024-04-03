@@ -1,6 +1,7 @@
 ﻿using Moq;
 using skullOS.HardwareServices.Interfaces;
 using skullOS.Modules;
+using skullOS.Modules.Exceptions;
 using skullOS.Modules.Interfaces;
 
 namespace ModuleTests
@@ -31,6 +32,23 @@ namespace ModuleTests
             sut.PlayTune(BuzzerLibrary.Tunes.AlphabetSong);
 
             Mock.Verify([buzzerPlayer]);
+        }
+
+        [Fact]
+        public void NameReturnsCorrect()
+        {
+            Assert.Equal("Buzzer", sut.ToString());
+        }
+
+        [Fact]
+        public void OnEnableThrowsException()
+        {
+            Assert.Throws<OnEnableException>(() => sut.OnEnable(It.IsAny<string[]>()));
+        }
+        [Fact]
+        public void OnActionThrowsException()
+        {
+            Assert.Throws<OnActionException>(() => sut.OnAction(It.IsAny<object>(), It.IsAny<EventArgs>()));
         }
     }
 }

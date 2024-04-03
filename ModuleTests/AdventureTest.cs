@@ -25,17 +25,17 @@ namespace ModuleTests
             Assert.NotNull(sut);
         }
         [Fact]
-        public void AdventureOnEnableThrowsException()
+        public void OnEnableThrowsException()
         {
             Assert.Throws<OnEnableException>(() => sut.OnEnable(It.IsAny<string[]>()));
         }
         [Fact]
-        public void AdventureOnActionThrowsException()
+        public void OnActionThrowsException()
         {
             Assert.Throws<OnActionException>(() => sut.OnAction(It.IsAny<object>(), It.IsAny<EventArgs>()));
         }
         [Fact]
-        public void AdventureReturnsCorrectName()
+        public void NameReturnsCorrect()
         {
             Assert.Equal("Adventure", sut.ToString());
         }

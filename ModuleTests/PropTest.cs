@@ -1,6 +1,7 @@
 ﻿using Moq;
 using skullOS.HardwareServices.Interfaces;
 using skullOS.Modules;
+using skullOS.Modules.Exceptions;
 
 namespace ModuleTests
 {
@@ -22,6 +23,23 @@ namespace ModuleTests
         public void CanCreateProp()
         {
             Assert.NotNull(sut);
+        }
+
+        [Fact]
+        public void NameReturnsCorrect()
+        {
+            Assert.Equal("Prop", sut.ToString());
+        }
+
+        [Fact]
+        public void OnEnableThrowsException()
+        {
+            Assert.Throws<OnEnableException>(() => sut.OnEnable(It.IsAny<string[]>()));
+        }
+        [Fact]
+        public void OnActionThrowsException()
+        {
+            Assert.Throws<OnActionException>(() => sut.OnAction(It.IsAny<object>(), It.IsAny<EventArgs>()));
         }
     }
 }
