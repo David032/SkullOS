@@ -1,0 +1,3 @@
+UseMic=False
+UseBuzzer=False
+CameraLight=6

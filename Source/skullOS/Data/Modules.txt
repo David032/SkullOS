@@ -1,0 +1,3 @@
+Camera=True
+Prop=True
+Adventure=True

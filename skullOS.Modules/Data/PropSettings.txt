@@ -1,3 +1,0 @@
-Sounds=False
-Lights=False
-Servos=False

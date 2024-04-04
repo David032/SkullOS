@@ -1,0 +1,4 @@
+UseMic=False
+UseBuzzer=False
+CameraLight=0
+UseSpeaker=False
