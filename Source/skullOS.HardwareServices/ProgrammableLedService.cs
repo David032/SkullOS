@@ -8,9 +8,16 @@ namespace skullOS.HardwareServices
     {
         public Ws2812b LedArray { get; private set; }
 
-        public ProgrammableLedService(SpiDevice spi, int width = 9)
+        public ProgrammableLedService(SpiDevice spi, int width = 9, Ws2812b LedArray = null)
         {
-            LedArray = new Ws2812b(spi, width);
+            if (LedArray == null)
+            {
+                this.LedArray = new Ws2812b(spi, width);
+            }
+            else
+            {
+                this.LedArray = LedArray;
+            }
         }
     }
 }

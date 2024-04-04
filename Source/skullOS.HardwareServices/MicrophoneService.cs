@@ -7,10 +7,18 @@ namespace skullOS.HardwareServices
     {
         public SoundDevice Microphone { get; private set; }
 
-        public MicrophoneService(SoundConnectionSettings? micSettings = null)
+        public MicrophoneService(SoundConnectionSettings? micSettings = null, SoundDevice mic = null)
         {
-            micSettings ??= new SoundConnectionSettings();
-            Microphone = SoundDevice.Create(micSettings); //Can't create a microphone if there's no mic!
+            if (mic == null)
+            {
+                micSettings ??= new SoundConnectionSettings();
+                Microphone = SoundDevice.Create(micSettings); //Can't create a microphone if there's no mic!
+            }
+            else
+            {
+                Microphone = mic;
+            }
+
         }
     }
 }

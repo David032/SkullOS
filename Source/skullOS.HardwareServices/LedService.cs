@@ -8,10 +8,17 @@ namespace skullOS.HardwareServices
         public Dictionary<string, int> LEDs { get; private set; }
         GpioController controller;
 
-        public LedService(Dictionary<string, int> leds)
+        public LedService(Dictionary<string, int> leds, GpioController controller = null)
         {
             LEDs = leds;
-            controller = new GpioController();
+            if (controller == null)
+            {
+                this.controller = new GpioController();
+            }
+            else
+            {
+                this.controller = controller;
+            }
         }
 
         public async void BlinkLight(string light)

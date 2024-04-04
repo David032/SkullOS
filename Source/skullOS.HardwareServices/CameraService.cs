@@ -15,7 +15,6 @@ namespace skullOS.HardwareServices
 
         public CameraService(int x = 2592, int y = 1944)
         {
-            _processSettings = ProcessSettingsFactory.CreateForLibcamerastill();
             xResolution = x;
             yResolution = y;
         }
