@@ -6,9 +6,16 @@ namespace skullOS.HardwareServices
     public class BuzzerService : IBuzzerService
     {
         public Buzzer Buzzer { get; private set; }
-        public BuzzerService(int pinNumber)
+        public BuzzerService(int pinNumber, Buzzer buzz = null)
         {
-            Buzzer = new Buzzer(pinNumber);
+            if (buzz == null)
+            {
+                Buzzer = new Buzzer(pinNumber);
+            }
+            else
+            {
+                Buzzer = buzz;
+            }
         }
 
         public void SetBuzzer(int pinNumber)
