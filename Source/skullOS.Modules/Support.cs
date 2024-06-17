@@ -19,31 +19,22 @@ namespace skullOS.Modules
         public Support(GpioController gpioController = null, ISpeakerService speaker = null, int signalPin = 4)
         {
             pin = signalPin;
-            LowBatteryAlert = new Timer(interval)
-            {
-                AutoReset = true,
-            };
-            LowBatteryAlert.Elapsed += LowBatteryAlert_Elapsed;
 
-            if (speaker == null)
-            {
-                speakerService = new SpeakerService();
-            }
-            else
-            {
-                speakerService = speaker;
-            }
+            speakerService = speaker ?? new SpeakerService();
 
-            if (gpioController == null)
-            {
-                controller = new GpioController();
-            }
-            else
-            {
-                controller = gpioController;
-            }
-            controller.OpenPin(pin);
-            controller.RegisterCallbackForPinValueChangedEvent(pin, PinEventTypes.Rising, OnLowBattery);
+            controller = gpioController ?? new GpioController();
+
+            Create();
+        }
+
+        public Support()
+        {
+            pin = 4; //This should really be read from a file
+
+            speakerService = new SpeakerService();
+
+            controller = new GpioController();
+            Create();
         }
 
         void OnLowBattery(object sender, PinValueChangedEventArgs args)
@@ -70,6 +61,17 @@ namespace skullOS.Modules
         public override string ToString()
         {
             return "Support";
+        }
+
+        public override void Create()
+        {
+            LowBatteryAlert = new Timer(interval)
+            {
+                AutoReset = true,
+            };
+            LowBatteryAlert.Elapsed += LowBatteryAlert_Elapsed;
+            controller.OpenPin(pin);
+            controller.RegisterCallbackForPinValueChangedEvent(pin, PinEventTypes.Rising, OnLowBattery);
         }
     }
 }

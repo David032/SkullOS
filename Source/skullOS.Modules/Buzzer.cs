@@ -34,6 +34,17 @@ namespace skullOS.Modules
             }
         }
 
+        public Buzzer()
+        {
+            PwmBuzzer = new BuzzerService(13); //This should really be read from a settings file
+            Player = new MelodyPlayer(PwmBuzzer.Buzzer);
+        }
+
+        public override void Create()
+        {
+            throw new NotImplementedException();
+        }
+
         public void PlayTune(Tunes tuneToPlay)
         {
             switch (tuneToPlay)
