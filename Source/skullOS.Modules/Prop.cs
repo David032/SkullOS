@@ -22,7 +22,8 @@ namespace skullOS.Modules
         ServoMotor rightFlap;
 
         Dictionary<string, string> propSettings;
-        public Prop(ISpeakerService speaker = null, ILedService leds = null, string pathToSettings = @"Data/PropSettings.txt")
+        public Prop(ISpeakerService speaker = null, ILedService leds = null,
+            string pathToSettings = @"Data/PropSettings.txt")
         {
             propSettings = SettingsLoader.LoadConfig(pathToSettings);
 
@@ -71,6 +72,61 @@ namespace skullOS.Modules
                     LedService = leds;
                     LedService.SetLeds(pins);
                 }
+
+                foreach (var item in LedService.GetLeds())
+                {
+                    string pin = item.Key;
+                    LedService.TurnOn(pin);
+                }
+            }
+
+            propSettings.TryGetValue("Servos", out string servosState);
+            bool useServos = bool.Parse(servosState);
+            if (propSettings.ContainsKey("Servos") && useServos)
+            {
+                SoftwarePwmChannel leftPWM = new(5, 50);
+                leftFlap = new ServoMotor(leftPWM);
+                leftFlap.Start();
+                SoftwarePwmChannel rightPWM = new(6, 50);
+                rightFlap = new ServoMotor(rightPWM);
+                rightFlap.Start();
+            }
+        }
+
+        public Prop()
+        {
+            propSettings = SettingsLoader.LoadConfig(@"Data/PropSettings.txt");
+
+            propSettings.TryGetValue("Sounds", out string soundsState);
+            bool useSounds = bool.Parse(soundsState);
+            if (propSettings.ContainsKey("Sounds") && useSounds)
+            {
+                SpeakerService = new SpeakerService();
+
+                SpeakerService.PlayAudio(@"Resources/computer-startup-music.mp3"); //This one won't await :(
+                sounds = Directory.GetFiles(@"Resources/Haro/Idles"); //This shouldn't be hardcoded like this at all >:(
+                numberOfIdles = sounds.Length;
+
+                PlayIdleSound = new Timer(interval)
+                {
+                    AutoReset = true
+                };
+                PlayIdleSound.Elapsed += PlayIdleSound_Elapsed;
+                PlayIdleSound.Start();
+            }
+
+            propSettings.TryGetValue("Lights", out string lightsState);
+            bool useLights = bool.Parse(lightsState);
+            if (propSettings.ContainsKey("Lights") && useLights)
+            {
+                //LEDs should be read from the file as well
+                Dictionary<string, int> pins = new()
+                {
+                        { "LeftEye", 26 },
+                        {"RightEye", 26 }
+                    };
+
+                LedService = new LedService(pins);
 
                 foreach (var item in LedService.GetLeds())
                 {
@@ -142,6 +198,11 @@ namespace skullOS.Modules
         public override string ToString()
         {
             return "Prop";
+        }
+
+        public override void Create()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -136,6 +136,75 @@ namespace skullOS.Modules
             }
         }
 
+        public Camera()
+        {
+            FileManager.CreateSubDirectory("Captures");
+            var cameraSettings = SettingsLoader.LoadConfig(@"Data/CameraSettings.txt");
+
+            CameraService = new CameraService();
+
+
+            if (cameraSettings.ContainsKey("UseMic"))
+            {
+                if (cameraSettings.TryGetValue("UseMic", out string shouldUseMic))
+                {
+                    if (bool.Parse(shouldUseMic))
+                    {
+                        //Might this be null coalescable?
+                        MicrophoneService = new MicrophoneService();
+                        useMic = true;
+                    }
+                    else
+                    {
+                        //No Mic desired
+                    }
+                }
+            }
+            if (cameraSettings.ContainsKey("CameraLight"))
+            {
+                if (cameraSettings.TryGetValue("CameraLight", out string lightPin))
+                {
+                    Dictionary<string, int> pins = new Dictionary<string, int>
+                    {
+                        { "CameraLight", int.Parse(lightPin) }
+                    };
+
+                    LedService = new LedService(pins);
+                }
+            }
+            if (cameraSettings.ContainsKey("UseBuzzer"))
+            {
+                if (cameraSettings.TryGetValue("UseBuzzer", out string shouldUseBuzzer))
+                {
+                    if (bool.Parse(shouldUseBuzzer))
+                    {
+                        //This should be reading from the file!
+                        BuzzerService = new BuzzerService(13);
+                        useBuzzer = true;
+                    }
+                    else
+                    {
+                        //No buzzer desired
+                    }
+                }
+            }
+            if (cameraSettings.ContainsKey("UseSpeaker"))
+            {
+                if (cameraSettings.TryGetValue("UseSpeaker", out string shouldUseSpeaker))
+                {
+                    if (bool.Parse(shouldUseSpeaker))
+                    {
+                        SpeakerService = new SpeakerService();
+                        useSpeaker = true;
+                    }
+                    else
+                    {
+                        //No Speaker desired
+                    }
+                }
+            }
+        }
+
         public async Task TakePicture()
         {
             if (!isActive)
@@ -221,6 +290,11 @@ namespace skullOS.Modules
                 default:
                     break;
             }
+        }
+
+        public override void Create()
+        {
+            throw new NotImplementedException();
         }
     }
 }

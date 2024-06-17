@@ -16,9 +16,6 @@ namespace skullOS.Modules
 
         public Adventure(ICameraService camService = null)
         {
-            string now = DateTime.Now.ToString("M");
-            FileManager.CreateSubDirectory("Timelapse - " + now);
-            directory = FileManager.GetSkullDirectory() + @"/Timelapse - " + now + @"/";
             if (camService == null)
             {
                 cameraService = new CameraService();
@@ -27,8 +24,20 @@ namespace skullOS.Modules
             {
                 cameraService = camService;
             }
+            Create();
+        }
 
+        public Adventure() 
+        {
+            cameraService = new CameraService();
+            Create();
+        }
 
+        public override void Create()
+        {
+            string now = DateTime.Now.ToString("M");
+            FileManager.CreateSubDirectory("Timelapse - " + now);
+            directory = FileManager.GetSkullDirectory() + @"/Timelapse - " + now + @"/";
             takePicture = new Timer(interval);
             takePicture.AutoReset = true;
             takePicture.Elapsed += TakePicture_Elapsed;

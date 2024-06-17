@@ -2,6 +2,11 @@
 {
     public class Downlink : Module, IDownlinkModule
     {
+        public override void Create()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void OnAction(object? sender, EventArgs e)
         {
             throw new NotImplementedException();
