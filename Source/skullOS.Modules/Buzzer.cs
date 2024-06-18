@@ -79,7 +79,7 @@ namespace skullOS.Modules
     /// 3rd party class for playing media via a buzzer
     /// Sourced from teh iot samples
     /// </summary>
-    public class MelodyPlayer : IMelodyPlayer
+    internal class MelodyPlayer : IMelodyPlayer
     {
         private readonly DeviceBuzzer _buzzer;
         private int _wholeNoteDurationInMilliseconds;
@@ -391,17 +391,16 @@ namespace skullOS.Modules
             Note = note;
             Octave = octave;
         }
-    }
 
-    /// <summary>
-    /// A pause
-    /// </summary>
-    internal class PauseElement : MelodyElement
-    {
-        public PauseElement(Duration duration) : base(duration)
+        /// <summary>
+        /// A pause
+        /// Once there's a tune with a puase in, this can be made internal again
+        /// </summary>
+        internal class PauseElement(BuzzerStructures.Duration duration) : MelodyElement(duration)
         {
-
         }
     }
+
+
     #endregion
 }

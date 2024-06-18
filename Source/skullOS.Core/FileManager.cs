@@ -61,7 +61,11 @@ namespace skullOS.Core
                     }
 
                 }
-
+                else
+                {
+                    var testDir = Directory.CreateDirectory("/tmp");
+                    rootDirectoryPath = testDir.FullName;
+                }
             }
 
         }

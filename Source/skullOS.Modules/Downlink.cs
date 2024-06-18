@@ -1,4 +1,6 @@
-﻿namespace skullOS.Modules
+﻿using skullOS.Modules.Exceptions;
+
+namespace skullOS.Modules
 {
     public class Downlink : Module, IDownlinkModule
     {
@@ -9,12 +11,12 @@
 
         public override void OnAction(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new OnActionException("Not yet implemented");
         }
 
         public override void OnEnable(string[] args)
         {
-            throw new NotImplementedException();
+            throw new OnEnableException("Not yet implemented");
         }
         public override string ToString()
         {
