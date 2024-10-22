@@ -97,12 +97,12 @@ namespace skullOS.Modules
                         //This should be reading from the file!
                         if (buzService == null)
                         {
-                            BuzzerService = new BuzzerService(13);
+                            BuzzerService = new BuzzerService(12);
                         }
                         else
                         {
                             BuzzerService = buzService;
-                            BuzzerService.SetBuzzer(13);
+                            BuzzerService.SetBuzzer(12);
                         }
                         useBuzzer = true;
                     }
