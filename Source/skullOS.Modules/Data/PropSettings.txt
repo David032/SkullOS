@@ -1,3 +1,3 @@
 Sounds=False
-Lights=False
+Lights=True
 Servos=False
