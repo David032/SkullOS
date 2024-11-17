@@ -1,8 +1,6 @@
 using Iot.Device.Camera.Settings;
 using Iot.Device.Common;
-using skullOS.HardwareServices.Exceptions;
 using skullOS.HardwareServices.Interfaces;
-using System.Diagnostics;
 
 namespace skullOS.HardwareServices
 {
@@ -24,35 +22,28 @@ namespace skullOS.HardwareServices
         //TODO: Still needs quality setting
         public async Task<string> RecordShortVideoAsync(string fileLocation, bool useMic)
         {
+            var processSettings = ProcessSettingsFactory.CreateForLibcameravid();
+            var builder = new CommandOptionsBuilder()
+                .WithContinuousStreaming()
+                .WithVflip()
+                .WithHflip()
+                .WithResolution(1920, 1080);
+            var args = builder.GetArguments();
+            using var proc = new ProcessRunner(processSettings);
+
+            var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string? filename = fileLocation + timestamp + ".h264";
+            using var file = File.OpenWrite(filename);
+
+            var task = await proc.ContinuousRunAsync(args, file);
+            await Task.Delay(30000);
+            proc.Dispose();
             try
             {
-                using Process videoRecording = new();
-                string args = string.Empty;
-                if (useMic)
-                {
-                    args = " --codec libav --hflip --vflip --libav-audio --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
-                        + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
-                }
-                else
-                {
-                    args = " --codec libav --hflip --vflip --width 1920 --height 1080 -t 30000 -o " + $"{fileLocation}"
-                        + DateTime.Now.ToString("yyyyMMddHHmmss") + ".mp4";
-                }
-                videoRecording.StartInfo.UseShellExecute = false;
-                videoRecording.StartInfo.FileName = "libcamera-vid";
-                videoRecording.StartInfo.Arguments = args;
-                videoRecording.EnableRaisingEvents = true;
-#if DEBUG
-                await Console.Out.WriteLineAsync("Running:");
-                await Console.Out.WriteLineAsync(videoRecording.StartInfo.FileName + videoRecording.StartInfo.Arguments);
-#endif
-                videoRecording.Start();
-                await Task.WhenAny(Task.Delay(30000));
+                await task;
             }
-            catch (CameraErrorException e)
+            catch (Exception)
             {
-                await Console.Out.WriteLineAsync(e.Message);
-                return "Camera errored when recording video!";
             }
 
             return $"({DateTime.Now}) Short video recorded!";
