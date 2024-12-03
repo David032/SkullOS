@@ -1,4 +1,5 @@
-﻿using skullOS.Modules.Interfaces;
+﻿using skullOS.Modules.Exceptions;
+using skullOS.Modules.Interfaces;
 
 namespace skullOS.Modules
 {
@@ -11,12 +12,12 @@ namespace skullOS.Modules
 
         public override void OnAction(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            throw new OnActionException("Not yet implemented");
         }
 
         public override void OnEnable(string[] args)
         {
-            throw new NotImplementedException();
+            throw new OnEnableException("Not yet implemented");
         }
         public override string ToString()
         {

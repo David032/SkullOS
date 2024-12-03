@@ -19,5 +19,10 @@ namespace skullOS.Core
 #endif
             File.AppendAllText(filepath, DateTime.Now.ToShortTimeString() + ":" + message + "\n");
         }
+
+        public string GetLogLocation()
+        {
+            return filepath;
+        }
     }
 }

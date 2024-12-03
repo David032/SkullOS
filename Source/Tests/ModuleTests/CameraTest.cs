@@ -40,5 +40,51 @@ namespace ModuleTests
             await sut.RecordShortVideo();
             Mock.Verify(camMock);
         }
+
+        [Fact]
+        public void CreateThrowsException() 
+        {
+            Camera sut = new Camera(camMock.Object, micMock.Object, speakerMock.Object, LedMock.Object, buzzerMock.Object, @"TestData/CameraSettings.txt");
+            Assert.Throws<NotImplementedException>(() => sut.Create());
+        }
+
+        [Fact]
+        public void ToStringReturnsName()
+        {
+            Camera sut = new Camera(camMock.Object, micMock.Object, speakerMock.Object, LedMock.Object, buzzerMock.Object, @"TestData/CameraSettings.txt");
+            Assert.Equal("Camera", sut.ToString());
+        }
+
+        [Fact]
+        public void OnEnableSetsModeCorrectly()
+        {
+            Camera sut = new Camera(camMock.Object, micMock.Object, speakerMock.Object, LedMock.Object, buzzerMock.Object, @"TestData/CameraSettings.txt");
+            sut.OnEnable(["ShortVideo"]);
+            Assert.Equal(CameraMode.ShortVideo, sut.CameraMode);
+        }
+
+        [Fact]
+        public void OnActionExecutesCorrectlyWithPicture()
+        {
+            camMock.Setup(camera => camera.TakePictureAsync(It.IsAny<string>())).Returns(Task.FromResult("Pass")).Verifiable();
+            Camera sut = new Camera(camMock.Object, micMock.Object, speakerMock.Object, LedMock.Object, buzzerMock.Object, @"TestData/CameraSettings.txt");
+            
+            sut.CameraMode = CameraMode.Image;
+            sut.OnAction(It.IsAny<object>(), It.IsAny<EventArgs>());
+            
+            Mock.Verify(camMock);
+        }
+        [Fact]
+        public void OnActionExecutesCorrectlyWithShortVideo()
+        {
+            camMock.Setup(camera =>
+                            camera.RecordShortVideoAsync(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.FromResult("Pass")).Verifiable();
+            Camera sut = new Camera(camMock.Object, micMock.Object, speakerMock.Object, LedMock.Object, buzzerMock.Object, @"TestData/CameraSettings.txt");
+            
+            sut.CameraMode= CameraMode.ShortVideo;
+            sut.OnAction(It.IsAny<object>(), It.IsAny<EventArgs>());
+            
+            Mock.Verify(camMock);
+        }
     }
 }
